@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Selection - Problems to Solve</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px 20px 60px;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 35px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        header p {
+            margin: 0;
+            font-size: 17px;
+            color: #d1d5db;
+        }
+
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .section-number {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 5px;
+            color: #111827;
+        }
+
+        h3 {
+            color: #1d4ed8;
+        }
+
+        .explanation {
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            padding: 15px 18px;
+            margin: 18px 0;
+            border-radius: 6px;
+        }
+
+        .problem {
+            background: #fff7ed;
+            border-left: 5px solid #f97316;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .problem h3 {
+            color: #c2410c;
+            margin-top: 0;
+        }
+
+        .challenge {
+            background: #f0fdf4;
+            border-left: 5px solid #16a34a;
+            padding: 15px 18px;
+            margin-top: 18px;
+            border-radius: 6px;
+        }
+
+        .challenge strong {
+            color: #15803d;
+        }
+
+        code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+
+        pre {
+            background: #111827;
+            color: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: Consolas, monospace;
+        }
+
+        ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 7px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f4f6;
+        }
+
+        .output {
+            background: #111827;
+            color: #22c55e;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: Consolas, monospace;
+        }
+
+        .checklist {
+            background: #f9fafb;
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .checklist li {
+            list-style: none;
+        }
+
+        .checklist li::before {
+            content: "☐ ";
+            font-weight: bold;
+        }
+
+        .boss {
+            border: 3px solid #7c3aed;
+            background: #faf5ff;
+        }
+
+        .boss h2 {
+            color: #6d28d9;
+        }
+
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Python Selection</h1>
+        <p>Use conditions to make your programs make decisions.</p>
+    </header>
+
+
+    <!-- SECTION 1 -->
+    <div class="section">
+
+        <span class="section-number">1</span>
+        <h2>Basic if / elif / else</h2>
+
+        <div class="explanation">
+            <strong>Remember:</strong><br>
+            <code>if</code> checks the first condition.<br>
+            <code>elif</code> checks another condition if the previous condition was false.<br>
+            <code>else</code> runs when all previous conditions are false.
+        </div>
+
+        <p>Only <strong>one branch</strong> of an if/elif/else structure will run.</p>
+
+        <div class="problem">
+            <h3>Problem: Temperature Warning</h3>
+
+            <p>
+                A weather station records the current temperature.
+                Write a Python program that asks the user to enter the
+                temperature in °C.
+            </p>
+
+            <p>Your program must:</p>
+
+            <ul>
+                <li>Output <strong>"It's hot!"</strong> if the temperature is 30 or above.</li>
+                <li>Output <strong>"The weather is warm."</strong> if the temperature is 20–29.</li>
+                <li>Output <strong>"The weather is cool."</strong> if the temperature is 10–19.</li>
+                <li>Output <strong>"It's cold!"</strong> for temperatures below 10.</li>
+            </ul>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Test your program with at least four different temperatures.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 2 -->
+    <div class="section">
+
+        <span class="section-number">2</span>
+        <h2>Comparison & Logical Operators</h2>
+
+        <p>You can use comparison operators to compare values.</p>
+
+        <table>
+            <tr>
+                <th>Operator</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td><code>==</code></td>
+                <td>Equal to</td>
+                <td><code>x == 5</code></td>
+            </tr>
+            <tr>
+                <td><code>!=</code></td>
+                <td>Not equal to</td>
+                <td><code>x != 0</code></td>
+            </tr>
+            <tr>
+                <td><code>&gt;</code></td>
+                <td>Greater than</td>
+                <td><code>x &gt; 10</code></td>
+            </tr>
+            <tr>
+                <td><code>&lt;</code></td>
+                <td>Less than</td>
+                <td><code>x &lt; 100</code></td>
+            </tr>
+            <tr>
+                <td><code>&gt;=</code></td>
+                <td>Greater than or equal</td>
+                <td><code>x &gt;= 18</code></td>
+            </tr>
+            <tr>
+                <td><code>&lt;=</code></td>
+                <td>Less than or equal</td>
+                <td><code>x &lt;= 50</code></td>
+            </tr>
+        </table>
+
+        <p>Logical operators combine conditions:</p>
+
+        <ul>
+            <li><code>and</code> — both conditions must be true.</li>
+            <li><code>or</code> — at least one condition must be true.</li>
+            <li><code>not</code> — reverses a Boolean value.</li>
+        </ul>
+
+        <div class="problem">
+            <h3>Problem: Cinema Ticket Checker</h3>
+
+            <p>
+                A cinema has a late-night movie screening.
+                Teenagers aged 13–17 can only enter if an adult is with them.
+                Anyone aged 18 or above can enter without an adult.
+            </p>
+
+            <p>Ask the user for:</p>
+
+            <ul>
+                <li><code>Age</code></li>
+                <li><code>HasAdult</code> — enter <code>yes</code> or <code>no</code></li>
+            </ul>
+
+            <p>The program should output:</p>
+
+            <div class="output">
+                Entry allowed
+            </div>
+
+            <p>or:</p>
+
+            <div class="output">
+                Entry denied
+            </div>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Use <code>and</code> and/or <code>or</code> to combine the conditions.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 3 -->
+    <div class="section">
+
+        <span class="section-number">3</span>
+        <h2>CASE OF Statements</h2>
+
+        <p>
+            In Cambridge pseudocode, <code>CASE OF</code> allows a program
+            to choose between several possible values.
+        </p>
+
+        <pre>INPUT Move
+
+CASE OF Move
+    'W' : Position ← Position - 10
+    'S' : Position ← Position + 10
+    'A' : Position ← Position - 1
+    'D' : Position ← Position + 1
+    OTHERWISE : OUTPUT "Invalid movement"
+ENDCASE</pre>
+
+        <div class="problem">
+            <h3>Problem: Robot Movement</h3>
+
+            <p>
+                You are programming a robot on a grid.
+                The robot starts at position <code>50</code>.
+            </p>
+
+            <p>Ask the user to enter a movement:</p>
+
+            <ul>
+                <li><strong>W</strong> → move up by 10</li>
+                <li><strong>S</strong> → move down by 10</li>
+                <li><strong>A</strong> → move left by 1</li>
+                <li><strong>D</strong> → move right by 1</li>
+                <li>Anything else → output <strong>"Invalid movement"</strong></li>
+            </ul>
+
+            <p>
+                Write the solution using a <strong>CASE OF</strong> statement
+                in Cambridge pseudocode.
+            </p>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Add a second variable to represent the robot's vertical position.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 4 -->
+    <div class="section">
+
+        <span class="section-number">4</span>
+        <h2>Nested Conditions</h2>
+
+        <div class="explanation">
+            A nested <code>if</code> is an <code>if</code> statement inside
+            another <code>if</code> statement.
+        </div>
+
+        <div class="problem">
+            <h3>Problem: Theme Park Ride Checker</h3>
+
+            <p>
+                A theme park has a roller coaster with the following rules:
+            </p>
+
+            <ul>
+                <li>The rider must be at least <strong>120 cm</strong> tall.</li>
+                <li>Riders under <strong>12 years old</strong> must have an adult with them.</li>
+                <li>Riders aged 12 or above can ride without an adult.</li>
+            </ul>
+
+            <p>Ask the user for:</p>
+
+            <ul>
+                <li><code>Age</code></li>
+                <li><code>Height</code></li>
+                <li><code>HasAdult</code></li>
+            </ul>
+
+            <p>Your program should give a useful message explaining the result.</p>
+
+            <p>For example:</p>
+
+            <div class="output">
+                You are too short.
+            </div>
+
+            <div class="output">
+                You need an adult with you.
+            </div>
+
+            <div class="output">
+                You can ride the roller coaster!
+            </div>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Use nested IF statements so that different error messages
+                can be displayed.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 5 -->
+    <div class="section">
+
+        <span class="section-number">5</span>
+        <h2>Common Mistakes</h2>
+
+        <p>Watch out for these mistakes:</p>
+
+        <ul>
+            <li>Using overlapping conditions.</li>
+            <li>Putting conditions in the wrong order.</li>
+            <li>Forgetting the <code>else</code> case.</li>
+            <li>Forgetting <code>ENDCASE</code> in pseudocode.</li>
+            <li>Forgetting <code>ENDIF</code> in pseudocode.</li>
+            <li>Not handling invalid input.</li>
+        </ul>
+
+        <div class="problem">
+            <h3>Problem: Grade Calculator</h3>
+
+            <p>A school uses the following grading system:</p>
+
+            <table>
+                <tr>
+                    <th>Mark</th>
+                    <th>Grade</th>
+                </tr>
+                <tr>
+                    <td>80–100</td>
+                    <td>A</td>
+                </tr>
+                <tr>
+                    <td>70–79</td>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <td>60–69</td>
+                    <td>C</td>
+                </tr>
+                <tr>
+                    <td>50–59</td>
+                    <td>D</td>
+                </tr>
+                <tr>
+                    <td>Below 50</td>
+                    <td>U</td>
+                </tr>
+            </table>
+
+            <p>
+                Write a program that asks the user to enter a mark
+                and outputs the correct grade.
+            </p>
+
+            <p>
+                If the mark is below 0 or above 100, output:
+            </p>
+
+            <div class="output">
+                Invalid mark
+            </div>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Make sure every possible mark is handled correctly.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 6 -->
+    <div class="section">
+
+        <span class="section-number">6</span>
+        <h2>Practice: Write a Selection Program</h2>
+
+        <div class="problem">
+            <h3>Problem: Game Shop Discount</h3>
+
+            <p>
+                You are creating a game shop checkout program.
+            </p>
+
+            <p>Ask the customer for:</p>
+
+            <ul>
+                <li>The price of one game</li>
+                <li>The number of games they are buying</li>
+            </ul>
+
+            <p>The shop gives these discounts:</p>
+
+            <table>
+                <tr>
+                    <th>Number of Games</th>
+                    <th>Discount</th>
+                </tr>
+                <tr>
+                    <td>5 or more</td>
+                    <td>20%</td>
+                </tr>
+                <tr>
+                    <td>3–4</td>
+                    <td>10%</td>
+                </tr>
+                <tr>
+                    <td>1–2</td>
+                    <td>0%</td>
+                </tr>
+            </table>
+
+            <p>
+                Calculate and output the final price.
+            </p>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Display the discount amount as well as the final price.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SECTION 7 -->
+    <div class="section">
+
+        <span class="section-number">7</span>
+        <h2>Truth Tables</h2>
+
+        <p>
+            Truth tables help us understand how logical operators work.
+        </p>
+
+        <h3>AND</h3>
+
+        <table>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A AND B</th>
+            </tr>
+            <tr>
+                <td>TRUE</td>
+                <td>TRUE</td>
+                <td>TRUE</td>
+            </tr>
+            <tr>
+                <td>TRUE</td>
+                <td>FALSE</td>
+                <td>FALSE</td>
+            </tr>
+            <tr>
+                <td>FALSE</td>
+                <td>TRUE</td>
+                <td>FALSE</td>
+            </tr>
+            <tr>
+                <td>FALSE</td>
+                <td>FALSE</td>
+                <td>FALSE</td>
+            </tr>
+        </table>
+
+        <h3>OR</h3>
+
+        <table>
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>A OR B</th>
+            </tr>
+            <tr>
+                <td>TRUE</td>
+                <td>TRUE</td>
+                <td>TRUE</td>
+            </tr>
+            <tr>
+                <td>TRUE</td>
+                <td>FALSE</td>
+                <td>TRUE</td>
+            </tr>
+            <tr>
+                <td>FALSE</td>
+                <td>TRUE</td>
+                <td>TRUE</td>
+            </tr>
+            <tr>
+                <td>FALSE</td>
+                <td>FALSE</td>
+                <td>FALSE</td>
+            </tr>
+        </table>
+
+        <h3>NOT</h3>
+
+        <table>
+            <tr>
+                <th>A</th>
+                <th>NOT A</th>
+            </tr>
+            <tr>
+                <td>TRUE</td>
+                <td>FALSE</td>
+            </tr>
+            <tr>
+                <td>FALSE</td>
+                <td>TRUE</td>
+            </tr>
+        </table>
+
+        <div class="problem">
+            <h3>Problem: Security Door</h3>
+
+            <p>
+                A security door should open when the correct conditions
+                are met.
+            </p>
+
+            <p>The door opens when:</p>
+
+            <ul>
+                <li>The user has a valid access card <strong>AND</strong> knows the correct PIN.</li>
+                <li><strong>OR</strong> the user is a security administrator.</li>
+            </ul>
+
+            <p>Create these variables:</p>
+
+            <pre>HasCard
+CorrectPIN
+IsAdmin</pre>
+
+            <p>
+                Write a condition that determines whether the door opens.
+            </p>
+
+            <p>The program should output either:</p>
+
+            <div class="output">
+                Access granted
+            </div>
+
+            <div class="output">
+                Access denied
+            </div>
+
+            <div class="challenge">
+                <strong>Challenge:</strong>
+                Complete a truth table showing all possible combinations
+                of HasCard and CorrectPIN.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FINAL CHALLENGE -->
+    <div class="section boss">
+
+        <span class="section-number">FINAL CHALLENGE</span>
+
+        <h2>Selection Master Challenge</h2>
+
+        <div class="problem">
+            <h3>Problem: School Sports Competition</h3>
+
+            <p>
+                You are writing a program to decide whether a student
+                can enter a school sports competition.
+            </p>
+
+            <p>Ask the student for:</p>
+
+            <ul>
+                <li><code>Age</code></li>
+                <li><code>Height</code></li>
+                <li><code>FitnessScore</code></li>
+            </ul>
+
+            <p>The student can enter if:</p>
+
+            <ul>
+                <li>They are <strong>13 or older</strong>.</li>
+                <li>Their height is at least <strong>150 cm</strong>.</li>
+                <li>Their fitness score is <strong>60 or higher</strong>.</li>
+            </ul>
+
+            <p>Give a different message for each problem:</p>
+
+            <ul>
+                <li>Too young → <strong>"You must be at least 13."</strong></li>
+                <li>Too short → <strong>"You must be at least 150 cm."</strong></li>
+                <li>Fitness score too low → <strong>"Your fitness score is too low."</strong></li>
+                <li>All requirements met → <strong>"You are accepted!"</strong></li>
+            </ul>
+
+            <div class="challenge">
+                <strong>Boss Challenge:</strong>
+
+                <ul>
+                    <li>Use nested conditions.</li>
+                    <li>Use <code>and</code> and/or <code>or</code>.</li>
+                    <li>Use comparison operators.</li>
+                    <li>Handle invalid fitness scores below 0 or above 100.</li>
+                    <li>Test your program with different inputs.</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>Before You Finish</h2>
+
+        <div class="checklist">
+            <ul>
+                <li>I can use <code>if</code>.</li>
+                <li>I can use <code>elif</code>.</li>
+                <li>I can use <code>else</code>.</li>
+                <li>I can compare values using comparison operators.</li>
+                <li>I can combine conditions using <code>and</code> and <code>or</code>.</li>
+                <li>I understand nested conditions.</li>
+                <li>I understand how CASE OF works in Cambridge pseudocode.</li>
+                <li>I can handle invalid or unexpected values.</li>
+            </ul>
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        <p>Selection is how your program learns to make decisions.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
