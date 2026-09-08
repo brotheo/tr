@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selection — Student Worksheet</title>
+<style>
+  :root{
+    --paper: #F6F4EE;
+    --card: #FFFFFF;
+    --line: #DAD3C2;
+    --ink: #1E2A32;
+    --ink-soft: #4B5761;
+    --accent: #2B5F8A;
+    --accent-soft: #E4EDF3;
+    --code-bg: #12181D;
+    --code-text: #DCE6EA;
+    --code-accent: #7FB7DD;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:48px 24px 96px;
+  }
+  header.page-head{
+    border-bottom:3px solid var(--ink);
+    padding-bottom:20px;
+    margin-bottom:36px;
+  }
+  header.page-head .kicker{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.03em;
+    color:var(--accent);
+    margin-bottom:6px;
+  }
+  header.page-head h1{
+    font-family:var(--serif);
+    font-size:38px;
+    margin:0 0 8px;
+    font-weight:600;
+  }
+  header.page-head p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:15px;
+    max-width:58ch;
+  }
+  .name-line{
+    margin-top:18px;
+    display:flex;
+    gap:28px;
+    font-size:14px;
+    color:var(--ink-soft);
+  }
+  .name-line span{
+    border-bottom:1px solid var(--line);
+    display:inline-block;
+    min-width:160px;
+    padding-bottom:2px;
+  }
+  .toolkit{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:20px 22px;
+    margin-bottom:44px;
+  }
+  .toolkit h2{
+    font-family:var(--serif);
+    font-size:18px;
+    margin:0 0 10px;
+  }
+  .toolkit table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  .toolkit td{
+    padding:4px 10px 4px 0;
+    vertical-align:top;
+    border-bottom:1px solid var(--line);
+  }
+  .toolkit tr:last-child td{border-bottom:none;}
+  .toolkit code{
+    font-family:var(--mono);
+    background:var(--accent-soft);
+    padding:1px 6px;
+    border-radius:3px;
+    color:var(--accent);
+  }
+  .problem{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:28px 28px 26px;
+    margin-bottom:28px;
+  }
+  .problem .num{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--accent);
+    margin-bottom:6px;
+  }
+  .problem h2{
+    font-family:var(--serif);
+    font-size:23px;
+    margin:0 0 12px;
+  }
+  .problem .statement{
+    font-size:15.5px;
+    color:var(--ink);
+  }
+  .problem .statement ul{
+    margin:8px 0 8px 20px;
+    padding:0;
+  }
+  .problem .statement li{margin-bottom:3px;}
+  .answer-label{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    margin:18px 0 6px;
+    text-transform:none;
+  }
+  textarea{
+    width:100%;
+    min-height:150px;
+    resize:vertical;
+    background:var(--code-bg);
+    color:var(--code-text);
+    font-family:var(--mono);
+    font-size:13.5px;
+    line-height:1.6;
+    border:none;
+    border-radius:5px;
+    padding:16px 18px;
+  }
+  textarea::placeholder{color:#5B6B75;}
+  textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .challenge{
+    margin-top:14px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    border-left:3px solid var(--accent);
+    padding-left:12px;
+  }
+  .challenge strong{color:var(--ink);}
+  .checklist{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:26px 28px;
+    margin-top:40px;
+  }
+  .checklist h2{
+    font-family:var(--serif);
+    font-size:21px;
+    margin:0 0 14px;
+  }
+  .checklist label{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:14.5px;
+    padding:6px 0;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+  }
+  .checklist label:last-child{border-bottom:none;}
+  .checklist input{margin-top:3px;}
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    margin-top:40px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <div class="kicker">IGCSE COMPUTER SCIENCE · CAMBRIDGE PSEUDOCODE</div>
+    <h1>Selection</h1>
+    <p>Work through each problem below. Read the problem statement, then write your pseudocode solution in the box provided. Try the challenge extension once your main solution works.</p>
+    <div class="name-line">
+      <span>Name: <span></span></span>
+      <span>Date: <span></span></span>
+    </div>
+  </header>
+
+  <div class="toolkit">
+    <h2>Quick reference</h2>
+    <table>
+      <tr><td><code>&lt;-</code></td><td>assignment</td><td><code>=</code></td><td>equal to</td></tr>
+      <tr><td><code>&lt;&gt;</code></td><td>not equal to</td><td><code>&gt;=  &lt;=</code></td><td>greater/less than or equal</td></tr>
+      <tr><td><code>AND / OR / NOT</code></td><td>logical operators</td><td><code>IF...THEN...ELSE...ENDIF</code></td><td>selection</td></tr>
+      <tr><td><code>CASE OF...ENDCASE</code></td><td>multi-way selection</td><td><code>OUTPUT / INPUT</code></td><td>display / read a value</td></tr>
+    </table>
+  </div>
+
+  <!-- Problem 1 -->
+  <div class="problem">
+    <div class="num">Problem 01</div>
+    <h2>Temperature Warning</h2>
+    <div class="statement">
+      <p>A weather station records the current temperature. Write a program that asks the user to enter the temperature in °C.</p>
+      <p>Your program must:</p>
+      <ul>
+        <li>Output <strong>"It's hot!"</strong> if the temperature is 30 or above.</li>
+        <li>Output <strong>"The weather is warm."</strong> if the temperature is 20–29.</li>
+        <li>Output <strong>"The weather is cool."</strong> if the temperature is 10–19.</li>
+        <li>Output <strong>"It's cold!"</strong> for temperatures below 10.</li>
+      </ul>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Test your program with at least four different temperatures.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Temperature : REAL
+
+INPUT Temperature
+..."></textarea>
+  </div>
+
+  <!-- Problem 2 -->
+  <div class="problem">
+    <div class="num">Problem 02</div>
+    <h2>Cinema Ticket Checker</h2>
+    <div class="statement">
+      <p>A cinema has a late-night movie screening. Teenagers aged 13–17 can only enter if an adult is with them. Anyone aged 18 or above can enter without an adult.</p>
+      <p>Ask the user for:</p>
+      <ul>
+        <li>Age</li>
+        <li>HasAdult — enter yes or no</li>
+      </ul>
+      <p>The program should output <strong>"Entry allowed"</strong> or <strong>"Entry denied"</strong>.</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Use AND and/or OR to combine the conditions.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Age : INTEGER
+DECLARE HasAdult : STRING
+..."></textarea>
+  </div>
+
+  <!-- Problem 3 -->
+  <div class="problem">
+    <div class="num">Problem 03</div>
+    <h2>Robot Movement</h2>
+    <div class="statement">
+      <p>You are programming a robot on a grid. The robot starts at position 50.</p>
+      <p>Ask the user to enter a movement:</p>
+      <ul>
+        <li>W → move up by 10</li>
+        <li>S → move down by 10</li>
+        <li>A → move left by 1</li>
+        <li>D → move right by 1</li>
+        <li>Anything else → output "Invalid movement"</li>
+      </ul>
+      <p>Write the solution using a <strong>CASE OF</strong> statement.</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Add a second variable to represent the robot's vertical position.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Move : CHAR
+DECLARE Position : INTEGER
+
+INPUT Move
+
+CASE OF Move
+..."></textarea>
+  </div>
+
+  <!-- Problem 4 -->
+  <div class="problem">
+    <div class="num">Problem 04</div>
+    <h2>Theme Park Ride Checker</h2>
+    <div class="statement">
+      <p>A theme park has a roller coaster with the following rules:</p>
+      <ul>
+        <li>The rider must be at least 120 cm tall.</li>
+        <li>Riders under 12 years old must have an adult with them.</li>
+        <li>Riders aged 12 or above can ride without an adult.</li>
+      </ul>
+      <p>Ask the user for Age, Height, and HasAdult. Your program should give a useful message explaining the result — for example "You are too short.", "You need an adult with you.", or "You can ride the roller coaster!"</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Use nested IF statements so that different error messages can be displayed.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Age : INTEGER
+DECLARE Height : INTEGER
+DECLARE HasAdult : STRING
+..."></textarea>
+  </div>
+
+  <!-- Problem 5 -->
+  <div class="problem">
+    <div class="num">Problem 05</div>
+    <h2>Grade Calculator</h2>
+    <div class="statement">
+      <p>A school uses the following grading system:</p>
+      <ul>
+        <li>80–100 → A</li>
+        <li>70–79 → B</li>
+        <li>60–69 → C</li>
+        <li>50–59 → D</li>
+        <li>Below 50 → U</li>
+      </ul>
+      <p>Write a program that asks the user to enter a mark and outputs the correct grade. If the mark is below 0 or above 100, output <strong>"Invalid mark"</strong>.</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Make sure every possible mark is handled correctly.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Mark : INTEGER
+
+INPUT Mark
+..."></textarea>
+  </div>
+
+  <!-- Problem 6 -->
+  <div class="problem">
+    <div class="num">Problem 06</div>
+    <h2>Game Shop Discount</h2>
+    <div class="statement">
+      <p>You are creating a game shop checkout program. Ask the customer for the price of one game and the number of games they are buying.</p>
+      <p>The shop gives these discounts:</p>
+      <ul>
+        <li>5 or more games → 20% discount</li>
+        <li>3–4 games → 10% discount</li>
+        <li>1–2 games → 0% discount</li>
+      </ul>
+      <p>Calculate and output the final price.</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Display the discount amount as well as the final price.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE Price : REAL
+DECLARE NumberOfGames : INTEGER
+..."></textarea>
+  </div>
+
+  <!-- Problem 7 -->
+  <div class="problem">
+    <div class="num">Problem 07</div>
+    <h2>Security Door</h2>
+    <div class="statement">
+      <p>A security door should open when the correct conditions are met. The door opens when:</p>
+      <ul>
+        <li>The user has a valid access card AND knows the correct PIN,</li>
+        <li>OR the user is a security administrator.</li>
+      </ul>
+      <p>Create these variables: HasCard, CorrectPIN, IsAdmin. Write a condition that determines whether the door opens. The program should output <strong>"Access granted"</strong> or <strong>"Access denied"</strong>.</p>
+    </div>
+    <div class="challenge"><strong>Challenge:</strong> Complete a truth table showing all possible combinations of HasCard and CorrectPIN.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea placeholder="DECLARE HasCard : BOOLEAN
+DECLARE CorrectPIN : BOOLEAN
+DECLARE IsAdmin : BOOLEAN
+..."></textarea>
+  </div>
+
+  <!-- Final Challenge -->
+  <div class="problem" style="border-color:var(--accent);">
+    <div class="num" style="color:var(--accent);">Final Challenge</div>
+    <h2>School Sports Competition</h2>
+    <div class="statement">
+      <p>You are writing a program to decide whether a student can enter a school sports competition. Ask the student for Age, Height, and FitnessScore.</p>
+      <p>The student can enter if:</p>
+      <ul>
+        <li>They are 13 or older.</li>
+        <li>Their height is at least 150 cm.</li>
+        <li>Their fitness score is 60 or higher.</li>
+      </ul>
+      <p>Give a different message for each problem:</p>
+      <ul>
+        <li>Too young → "You must be at least 13."</li>
+        <li>Too short → "You must be at least 150 cm."</li>
+        <li>Fitness score too low → "Your fitness score is too low."</li>
+        <li>All requirements met → "You are accepted!"</li>
+      </ul>
+    </div>
+    <div class="challenge"><strong>Boss challenge:</strong> Use nested conditions, AND and/or OR, and comparison operators. Handle invalid fitness scores below 0 or above 100. Test your program with different inputs.</div>
+    <div class="answer-label">// your pseudocode</div>
+    <textarea style="min-height:200px" placeholder="DECLARE Age : INTEGER
+DECLARE Height : REAL
+DECLARE FitnessScore : INTEGER
+..."></textarea>
+  </div>
+
+  <div class="checklist">
+    <h2>Before you finish</h2>
+    <label><input type="checkbox"> I can use IF, ELSE, and nested IF statements.</label>
+    <label><input type="checkbox"> I can compare values using comparison operators.</label>
+    <label><input type="checkbox"> I can combine conditions using AND and OR.</label>
+    <label><input type="checkbox"> I understand nested conditions.</label>
+    <label><input type="checkbox"> I understand how CASE OF works in Cambridge pseudocode.</label>
+    <label><input type="checkbox"> I can handle invalid or unexpected values.</label>
+    <label><input type="checkbox"> I remembered ENDIF and ENDCASE every time.</label>
+  </div>
+
+  <footer>IGCSE Computer Science — Selection · Cambridge Pseudocode</footer>
+</div>
+</body>
+</html>
