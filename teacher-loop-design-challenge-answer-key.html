@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Design Challenge — Teacher Answer Key</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D1210;
+    --surface: #161E1A;
+    --surface-raised: #1C2620;
+    --line: #2A3530;
+    --text: #E7EDE9;
+    --text-dim: #93A29A;
+    --text-faint: #5E6D66;
+
+    --for: #E8B34C;
+    --for-dim: #4A3D22;
+    --while: #5EC8D8;
+    --while-dim: #1F3A3E;
+    --repeat: #E2735E;
+    --repeat-dim: #3F2620;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root[data-theme="light"] {
+    --bg: #F5F3EE; --surface: #FFFFFF; --surface-raised: #FBFAF7;
+    --line: #DDD8CD; --text: #191F1B; --text-dim: #5A6660; --text-faint: #939D97;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F5F3EE; --surface: #FFFFFF; --surface-raised: #FBFAF7;
+      --line: #DDD8CD; --text: #191F1B; --text-dim: #5A6660; --text-faint: #939D97;
+      color-scheme: light;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--font-display); line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  .kicker {
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-faint);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px;
+  }
+  h1 {
+    font-size: clamp(1.9rem, 4.5vw, 2.5rem); line-height: 1.1; margin: 0 0 14px;
+    font-weight: 700; letter-spacing: -0.01em; max-width: 20ch;
+  }
+  .lede { color: var(--text-dim); font-size: 1.02rem; max-width: 52ch; margin: 0 0 8px; }
+  .lede-small { color: var(--text-faint); font-size: 0.85rem; margin: 0 0 40px; }
+
+  .legend {
+    display: flex; gap: 10px; flex-wrap: wrap; margin: 24px 0 44px;
+  }
+  .legend-chip {
+    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px; border: 1px solid var(--line);
+  }
+  .legend-chip.for { color: var(--for); border-color: var(--for); background: var(--for-dim); }
+  .legend-chip.while { color: var(--while); border-color: var(--while); background: var(--while-dim); }
+  .legend-chip.repeat { color: var(--repeat); border-color: var(--repeat); background: var(--repeat-dim); }
+
+  .section-heading {
+    font-size: 1.3rem; font-weight: 700; margin: 56px 0 6px;
+    padding-top: 8px; border-top: 1px solid var(--line);
+  }
+  .section-heading:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 26px 26px; margin-bottom: 20px;
+  }
+  .card-top {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px;
+  }
+  .qnum { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-faint); }
+  .marks { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-faint); white-space: nowrap; }
+  .card h2 { font-size: 1.15rem; margin: 4px 0 12px; font-weight: 600; }
+  .scenario { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 16px; }
+
+  .answer-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem;
+    padding: 7px 14px; border-radius: 8px; margin-bottom: 16px;
+  }
+  .answer-badge.FOR { color: var(--for); background: var(--for-dim); border: 1px solid var(--for); }
+  .answer-badge.WHILE { color: var(--while); background: var(--while-dim); border: 1px solid var(--while); }
+  .answer-badge.REPEAT { color: var(--repeat); background: var(--repeat-dim); border: 1px solid var(--repeat); }
+
+  .field-label {
+    font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-faint);
+    display: block; margin: 16px 0 6px;
+  }
+  .field-label:first-of-type { margin-top: 0; }
+
+  ul.marking { margin: 0; padding-left: 20px; color: var(--text-dim); font-size: 0.92rem; }
+  ul.marking li { margin-bottom: 5px; }
+
+  pre.pseudocode {
+    font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6;
+    background: #0A0F0D; color: #CFE8D6; border: 1px solid var(--line);
+    border-radius: 8px; padding: 14px 16px; overflow-x: auto; white-space: pre; margin: 0;
+  }
+  :root[data-theme="light"] pre.pseudocode { background: #12181A; }
+
+  .final-answers { display: grid; gap: 10px; margin-bottom: 4px; }
+  .final-answers .qa { font-size: 0.92rem; }
+  .final-answers .qa .q { color: var(--text-faint); font-family: var(--font-mono); font-size: 0.76rem; }
+  .final-answers .qa .a { color: var(--text); }
+
+  footer.page-foot {
+    text-align: center; color: var(--text-faint); font-size: 0.78rem;
+    font-family: var(--font-mono); margin-top: 40px;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .card { break-inside: avoid; border-color: #ccc; background: #fafafa; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">
+    <span>IGCSE Computer Science · Loop Design · Teacher Answer Key</span>
+  </div>
+  <h1>Answer key &amp; model pseudocode</h1>
+  <p class="lede">Correct loop, mark-scheme reasoning, and a model pseudocode answer for all 16 practice questions and the final exam challenge — matches the student worksheet question-for-question.</p>
+  <p class="lede-small">Pseudocode shown is one acceptable model answer; accept equivalent structures that use the same loop type correctly.</p>
+
+  <div class="legend">
+    <span class="legend-chip for">FOR — known count</span>
+    <span class="legend-chip while">WHILE — checks before, may run zero times</span>
+    <span class="legend-chip repeat">REPEAT UNTIL — checks after, always runs once</span>
+  </div>
+
+  <div class="section-heading">Questions 1–9</div>
+  <div id="main-answers"></div>
+
+  <div class="section-heading">Extra practice — WHILE &amp; REPEAT UNTIL</div>
+  <div id="extra-answers"></div>
+
+  <div class="section-heading">Final exam challenge — Question 10</div>
+  <div id="final-answer"></div>
+
+  <footer class="page-foot">Model answers for internal teaching use.</footer>
+</div>
+
+<script>
+const ANSWERS = [
+  {
+    id: 1, title: "School Attendance", marks: "3 marks",
+    scenario: "Records attendance for every student in a class of 35 students; counts and outputs the number absent.",
+    loop: "FOR",
+    marking: [
+      "1 mark: identifies FOR loop",
+      "1 mark: reason — the number of students (35) is fixed and known before the loop runs",
+      "1 mark: correctly links the loop to counting absences for each of the 35 students"
+    ],
+    pseudocode: "absentCount <- 0\nFOR student <- 1 TO 35\n  INPUT status\n  IF status = \"Absent\" THEN\n    absentCount <- absentCount + 1\n  ENDIF\nNEXT student\nOUTPUT absentCount"
+  },
+  {
+    id: 2, title: "ATM PIN", marks: "3 marks",
+    scenario: "Customer has unlimited attempts until the correct PIN is entered; program must not continue until then.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — the PIN must be entered at least once before it can be checked",
+      "1 mark: loop condition correctly checks for the correct PIN after each entry"
+    ],
+    pseudocode: "REPEAT\n  INPUT enteredPIN\nUNTIL enteredPIN = correctPIN\nOUTPUT \"Access granted\""
+  },
+  {
+    id: 3, title: "Examination Mark", marks: "3 marks",
+    scenario: "Mark must be 0–100 inclusive; program asks again if invalid; teacher must enter a value at least once.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — a value must be entered at least once before it can be validated",
+      "1 mark: condition correctly checks the mark is within the valid range (0–100)"
+    ],
+    pseudocode: "REPEAT\n  INPUT mark\nUNTIL mark >= 0 AND mark <= 100\nOUTPUT mark"
+  },
+  {
+    id: 4, title: "Online Shopping", marks: "3 marks",
+    scenario: "12 orders; input each order value, calculate total, count orders worth more than 2,000 baht.",
+    loop: "FOR",
+    marking: [
+      "1 mark: identifies FOR loop",
+      "1 mark: reason — the number of orders (12) is fixed and known in advance",
+      "1 mark: correctly accumulates total and counts orders over 2,000 baht within the loop"
+    ],
+    pseudocode: "total <- 0\nbigOrders <- 0\nFOR order <- 1 TO 12\n  INPUT orderValue\n  total <- total + orderValue\n  IF orderValue > 2000 THEN\n    bigOrders <- bigOrders + 1\n  ENDIF\nNEXT order\nOUTPUT total\nOUTPUT bigOrders"
+  },
+  {
+    id: 5, title: "Warehouse Scanner", marks: "3 marks",
+    scenario: "Number of products not known in advance; worker enters product codes; \"END\" means no more products; output count scanned.",
+    loop: "WHILE",
+    marking: [
+      "1 mark: identifies WHILE loop",
+      "1 mark: reason — the number of products is unknown, so a sentinel value (END) controls when the loop stops",
+      "1 mark: condition correctly checks the entered code is not the sentinel before processing it"
+    ],
+    pseudocode: "count <- 0\nINPUT code\nWHILE code <> \"END\"\n  count <- count + 1\n  INPUT code\nENDWHILE\nOUTPUT count"
+  },
+  {
+    id: 6, title: "Game Character Creation", marks: "3 marks",
+    scenario: "Username must contain at least 5 characters; ask, check, ask again if invalid, continue until valid.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — the player must be asked at least once before the username can be validated",
+      "1 mark: condition correctly checks the username length is at least 5 characters"
+    ],
+    pseudocode: "REPEAT\n  INPUT username\nUNTIL LENGTH(username) >= 5\nOUTPUT \"Username accepted\""
+  },
+  {
+    id: 7, title: "Robot Battery Monitoring", marks: "3 marks",
+    scenario: "Battery starts at 100%; robot continues deliveries while battery is above 20%; number of deliveries unknown.",
+    loop: "WHILE",
+    marking: [
+      "1 mark: identifies WHILE loop",
+      "1 mark: reason — the condition (battery > 20%) must be checked before each delivery, so the loop could run zero times",
+      "1 mark: condition and battery update correctly placed inside the loop"
+    ],
+    pseudocode: "batteryLevel <- 100\nWHILE batteryLevel > 20\n  CALL makeDelivery()\n  batteryLevel <- batteryLevel - deliveryUsage\nENDWHILE"
+  },
+  {
+    id: 8, title: "School Cafeteria", marks: "3 marks",
+    scenario: "200 students; input amount paid, calculate total collected, count students who paid more than 100 baht.",
+    loop: "FOR",
+    marking: [
+      "1 mark: identifies FOR loop",
+      "1 mark: reason — the number of students (200) is fixed and known in advance",
+      "1 mark: correctly accumulates total and counts students over 100 baht within the loop"
+    ],
+    pseudocode: "total <- 0\nhighSpenders <- 0\nFOR student <- 1 TO 200\n  INPUT amountPaid\n  total <- total + amountPaid\n  IF amountPaid > 100 THEN\n    highSpenders <- highSpenders + 1\n  ENDIF\nNEXT student\nOUTPUT total\nOUTPUT highSpenders"
+  },
+  {
+    id: 9, title: "Temperature Sensor", marks: "3 marks",
+    scenario: "Sensor keeps sending readings until temperature reaches 80°C or higher; record how many readings were taken.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — a reading must be taken at least once before it can be compared to 80°C",
+      "1 mark: condition and counter correctly track readings until the threshold is reached"
+    ],
+    pseudocode: "readingCount <- 0\nREPEAT\n  INPUT temperature\n  readingCount <- readingCount + 1\nUNTIL temperature >= 80\nOUTPUT readingCount"
+  }
+];
+
+const EXTRA_ANSWERS = [
+  {
+    id: 11, title: "Vending Machine Stock", marks: "3 marks",
+    scenario: "Sells cans while stock remains; number of customers unknown in advance.",
+    loop: "WHILE",
+    marking: [
+      "1 mark: identifies WHILE loop",
+      "1 mark: reason — stock is checked before each sale, so the machine could sell zero cans if already empty",
+      "1 mark: stock correctly decreased inside the loop"
+    ],
+    pseudocode: "WHILE stock > 0\n  CALL dispenseCan()\n  stock <- stock - 1\nENDWHILE"
+  },
+  {
+    id: 12, title: "Weather Station", marks: "3 marks",
+    scenario: "Keeps taking humidity readings while humidity stays below 60%.",
+    loop: "WHILE",
+    marking: [
+      "1 mark: identifies WHILE loop",
+      "1 mark: reason — humidity is checked before each reading, so the loop could run zero times if already at 60% or higher",
+      "1 mark: condition correctly written as humidity < 60"
+    ],
+    pseudocode: "INPUT humidity\nWHILE humidity < 60\n  INPUT humidity\nENDWHILE\nOUTPUT \"Alert: humidity reached 60%\""
+  },
+  {
+    id: 13, title: "Boss Fight Health", marks: "3 marks",
+    scenario: "Boss keeps attacking while its health remains above 0; number of attacks unknown.",
+    loop: "WHILE",
+    marking: [
+      "1 mark: identifies WHILE loop",
+      "1 mark: reason — health is checked before each attack, so the fight could already be over",
+      "1 mark: health correctly reduced by a random amount inside the loop"
+    ],
+    pseudocode: "WHILE bossHealth > 0\n  damage <- RANDOM(5, 20)\n  bossHealth <- bossHealth - damage\n  CALL attackPlayer()\nENDWHILE"
+  },
+  {
+    id: 14, title: "Password Confirmation", marks: "3 marks",
+    scenario: "Asks for password then confirmation; retries if they don't match; must ask at least once.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — both entries must be made at least once before they can be compared",
+      "1 mark: condition correctly checks the two entries are equal"
+    ],
+    pseudocode: "REPEAT\n  INPUT password\n  INPUT confirmPassword\nUNTIL password = confirmPassword\nOUTPUT \"Password set\""
+  },
+  {
+    id: 15, title: "Dice Game", marks: "3 marks",
+    scenario: "Player rolls a die until a 6 is rolled; every roll counts, including the first.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — the die is always rolled at least once before the result can be checked",
+      "1 mark: condition correctly checks for a roll of 6"
+    ],
+    pseudocode: "REPEAT\n  roll <- RANDOM(1, 6)\nUNTIL roll = 6\nOUTPUT \"Rolled a 6!\""
+  },
+  {
+    id: 16, title: "Restaurant Menu", marks: "3 marks",
+    scenario: "Kiosk shows menu and asks for a number; redisplays and asks again if invalid; must show menu at least once.",
+    loop: "REPEAT",
+    marking: [
+      "1 mark: identifies REPEAT UNTIL",
+      "1 mark: reason — the menu must be shown and a choice entered at least once before it can be validated",
+      "1 mark: condition correctly checks the entered number matches a valid menu item"
+    ],
+    pseudocode: "REPEAT\n  CALL displayMenu()\n  INPUT choice\nUNTIL choice IS VALID MENU ITEM\nOUTPUT \"Order confirmed\""
+  }
+];
+
+function renderAnswer(a, container) {
+  const card = document.createElement("div");
+  card.className = "card";
+  const loopLabel = a.loop === "REPEAT" ? "REPEAT UNTIL" : a.loop;
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="qnum">Question ${a.id}</span>
+      <span class="marks">${a.marks}</span>
+    </div>
+    <h2>${a.title}</h2>
+    <p class="scenario">${a.scenario}</p>
+    <span class="answer-badge ${a.loop}">${loopLabel}</span>
+    <span class="field-label">Mark scheme</span>
+    <ul class="marking">${a.marking.map(m => "<li>" + m + "</li>").join("")}</ul>
+    <span class="field-label">Model pseudocode</span>
+    <pre class="pseudocode">${a.pseudocode}</pre>
+  `;
+  container.appendChild(card);
+}
+
+ANSWERS.forEach(a => renderAnswer(a, document.getElementById("main-answers")));
+EXTRA_ANSWERS.forEach(a => renderAnswer(a, document.getElementById("extra-answers")));
+
+// Final challenge — Question 10
+const finalCard = document.createElement("div");
+finalCard.className = "card";
+finalCard.innerHTML = `
+  <div class="card-top">
+    <span class="qnum">Question 10 · Airport Security</span>
+    <span class="marks">5 marks</span>
+  </div>
+  <p class="scenario">Processes passengers one at a time; queue length unknown; stops when the officer enters STOP; outputs the total who passed security.</p>
+  <span class="answer-badge WHILE">WHILE</span>
+  <div class="final-answers">
+    <div class="qa"><div class="q">2. Sentinel value</div><div class="a">The string "STOP", entered by the security officer in place of a passport number.</div></div>
+    <div class="qa"><div class="q">3. When the loop stops</div><div class="a">As soon as "STOP" is entered instead of a passport number — checked before processing each passenger, so the queue could already be empty.</div></div>
+    <div class="qa"><div class="q">4. Stored before the loop begins</div><div class="a">A counter for passengers who passed security, initialised to 0.</div></div>
+  </div>
+  <span class="field-label">Mark scheme</span>
+  <ul class="marking">
+    <li>1 mark: identifies WHILE loop</li>
+    <li>1 mark: correct sentinel value identified (STOP)</li>
+    <li>1 mark: correct stopping condition described</li>
+    <li>1 mark: counter variable correctly initialised before the loop</li>
+    <li>1 mark: model pseudocode correctly structured and matches the description above</li>
+  </ul>
+  <span class="field-label">Model pseudocode</span>
+  <pre class="pseudocode">passedCount <- 0
+INPUT passportNumber
+WHILE passportNumber <> "STOP"
+  INPUT securityStatus
+  IF securityStatus = "Pass" THEN
+    passedCount <- passedCount + 1
+  ENDIF
+  INPUT passportNumber
+ENDWHILE
+OUTPUT passedCount</pre>
+`;
+document.getElementById("final-answer").appendChild(finalCard);
+</script>
+</body>
+</html>

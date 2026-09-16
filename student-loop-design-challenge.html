@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loop Design Challenge — Student Worksheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D1210;
+    --surface: #161E1A;
+    --surface-raised: #1C2620;
+    --line: #2A3530;
+    --text: #E7EDE9;
+    --text-dim: #93A29A;
+    --text-faint: #5E6D66;
+
+    --for: #E8B34C;
+    --for-dim: #4A3D22;
+    --while: #5EC8D8;
+    --while-dim: #1F3A3E;
+    --repeat: #E2735E;
+    --repeat-dim: #3F2620;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F5F3EE;
+    --surface: #FFFFFF;
+    --surface-raised: #FBFAF7;
+    --line: #DDD8CD;
+    --text: #191F1B;
+    --text-dim: #5A6660;
+    --text-faint: #939D97;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F5F3EE;
+      --surface: #FFFFFF;
+      --surface-raised: #FBFAF7;
+      --line: #DDD8CD;
+      --text: #191F1B;
+      --text-dim: #5A6660;
+      --text-faint: #939D97;
+      color-scheme: light;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-display);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+  }
+
+  /* ---- Hero ---- */
+  header.hero {
+    margin-bottom: 56px;
+  }
+
+  .eyebrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    letter-spacing: 0.02em;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    line-height: 1.08;
+    margin: 0 0 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+
+  .lede {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 46ch;
+    margin: 0 0 32px;
+  }
+
+  .loop-diagram {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .loop-key {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 12px;
+    background: var(--surface);
+  }
+
+  .loop-key svg { display: block; width: 100%; height: 46px; margin-bottom: 10px; }
+  .loop-key .name {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .loop-key .desc {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    margin-top: 3px;
+  }
+  .loop-key.for .name { color: var(--for); }
+  .loop-key.while .name { color: var(--while); }
+  .loop-key.repeat .name { color: var(--repeat); }
+
+  /* progress */
+  .progress-shell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+  .progress-track {
+    flex: 1;
+    height: 5px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--while), var(--for));
+    transition: width 0.4s ease;
+  }
+
+  /* ---- Question cards ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 26px;
+    margin-bottom: 22px;
+    position: relative;
+  }
+
+  .card.final {
+    border-color: var(--repeat);
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 100%);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .qnum {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-faint);
+  }
+
+  .marks {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    margin: 4px 0 12px;
+    font-weight: 600;
+  }
+
+  .scenario {
+    color: var(--text-dim);
+    font-size: 0.96rem;
+    margin-bottom: 18px;
+  }
+  .scenario ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+  }
+  .scenario li { margin-bottom: 4px; }
+
+  .clue-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    padding: 3px 8px;
+    margin-bottom: 18px;
+  }
+
+  .choice-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .choice-btn {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+  }
+
+  .choice-btn:hover { border-color: var(--text-faint); }
+
+  .choice-btn[data-loop="FOR"].active {
+    background: var(--for-dim);
+    border-color: var(--for);
+    color: var(--for);
+  }
+  .choice-btn[data-loop="WHILE"].active {
+    background: var(--while-dim);
+    border-color: var(--while);
+    color: var(--while);
+  }
+  .choice-btn[data-loop="REPEAT"].active {
+    background: var(--repeat-dim);
+    border-color: var(--repeat);
+    color: var(--repeat);
+  }
+
+  textarea, input[type="text"] {
+    width: 100%;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 64px;
+  }
+  input[type="text"] { min-height: unset; }
+
+  textarea.pseudocode {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    min-height: 130px;
+    white-space: pre;
+    background: #0A0F0D;
+    color: #CFE8D6;
+    border-color: var(--line);
+  }
+  .pseudo-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0 6px;
+  }
+  .pseudo-head .field-label { margin: 0; }
+  .step4-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-faint);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 2px 7px;
+  }
+  textarea:focus, input[type="text"]:focus, .choice-btn:focus-visible {
+    outline: 2px solid var(--while);
+    outline-offset: 1px;
+  }
+  textarea::placeholder, input::placeholder { color: var(--text-faint); }
+
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin: 14px 0 6px;
+    display: block;
+  }
+  .field-label:first-of-type { margin-top: 0; }
+
+  .final-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .extra-intro {
+    margin: 48px 0 20px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  .extra-heading {
+    font-size: 1.4rem;
+    margin: 20px 0 6px;
+    font-weight: 700;
+  }
+
+  /* ---- Exam rule footer ---- */
+  .rule-box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 26px;
+    margin-top: 40px;
+  }
+  .rule-box h2 {
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+  }
+  .rule-box .lede-small {
+    color: var(--text-faint);
+    font-size: 0.85rem;
+    margin-bottom: 22px;
+  }
+  .steps {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .step .dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+  .step strong { font-size: 0.94rem; display: block; margin-bottom: 2px; }
+  .step span.detail { color: var(--text-dim); font-size: 0.88rem; }
+
+  .clue-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .clue-chip {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 5px 12px;
+  }
+
+  footer.page-foot {
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 520px) {
+    .loop-diagram { grid-template-columns: 1fr; }
+    .card { padding: 22px 18px; }
+    .choice-btn { min-width: 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow-row">
+      <span class="kicker">IGCSE Computer Science · Loop Design · Student Worksheet</span>
+    </div>
+    <h1>Choose the loop before you write a line of code.</h1>
+    <p class="lede">Ten scenarios, then a final challenge. For each one, decide FOR, WHILE, or REPEAT&nbsp;UNTIL — and say why — before any pseudocode gets written.</p>
+
+    <div class="loop-diagram">
+      <div class="loop-key for">
+        <svg viewBox="0 0 100 46"><g fill="none" stroke="#E8B34C" stroke-width="2.5" stroke-linecap="round">
+          <line x1="8" y1="23" x2="92" y2="23"/>
+          <circle cx="18" cy="23" r="3" fill="#E8B34C"/>
+          <circle cx="38" cy="23" r="3" fill="#E8B34C"/>
+          <circle cx="58" cy="23" r="3" fill="#E8B34C"/>
+          <circle cx="78" cy="23" r="3" fill="#E8B34C" opacity="0.4"/>
+          <path d="M84 18 L92 23 L84 28" fill="none"/>
+        </g></svg>
+        <div class="name">FOR</div>
+        <div class="desc">Known count of repeats</div>
+      </div>
+      <div class="loop-key while">
+        <svg viewBox="0 0 100 46"><g fill="none" stroke="#5EC8D8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 23 L38 12 L54 23 L38 34 Z"/>
+          <path d="M54 23 L84 23" />
+          <path d="M22 23 C10 23 10 34 22 34 L38 34" />
+          <path d="M78 18 L84 23 L78 28"/>
+        </g></svg>
+        <div class="name">WHILE</div>
+        <div class="desc">Check before running — may run zero times</div>
+      </div>
+      <div class="loop-key repeat">
+        <svg viewBox="0 0 100 46"><g fill="none" stroke="#E2735E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M62 23 L78 12 L94 23 L78 34 Z"/>
+          <path d="M16 23 L62 23"/>
+          <path d="M78 34 C78 44 40 44 40 34 L40 23"/>
+          <path d="M10 18 L16 23 L10 28"/>
+        </g></svg>
+        <div class="name">REPEAT UNTIL</div>
+        <div class="desc">Check after running — always runs once</div>
+      </div>
+    </div>
+
+    <div class="progress-shell" style="margin-top:22px;">
+      <span id="progress-label">0 / 10 answered</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </header>
+
+  <main id="questions"></main>
+
+  <section class="extra-intro">
+    <h2 class="extra-heading">Extra practice — WHILE &amp; REPEAT UNTIL</h2>
+    <p class="lede-small">The scenarios above already mix all three loop types. These six focus only on the two that trip people up most.</p>
+  </section>
+  <main id="extra-questions"></main>
+
+  <section class="rule-box">
+    <h2>The exam rule</h2>
+    <p class="lede-small">Follow this order every time — never pick a loop because you remember its syntax.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="dot">1</div>
+        <div><strong>Read the scenario</strong><span class="detail"> — all of it, before deciding anything.</span></div>
+      </div>
+      <div class="step">
+        <div class="dot">2</div>
+        <div><strong>Identify the clue word</strong><span class="detail"> — the phrase that tells you how the repetition is controlled.</span></div>
+      </div>
+      <div class="step">
+        <div class="dot">3</div>
+        <div><strong>Choose the loop</strong><span class="detail"> — based on the clue, not on habit.</span></div>
+      </div>
+      <div class="step">
+        <div class="dot">4</div>
+        <div><strong>Only then write the pseudocode</strong><span class="detail"> — the structure comes last, not first.</span></div>
+      </div>
+    </div>
+    <span class="field-label" style="margin-top:0;">Clue words to watch for</span>
+    <div class="clue-cloud">
+      <span class="clue-chip">exactly 10</span>
+      <span class="clue-chip">for every student</span>
+      <span class="clue-chip">until</span>
+      <span class="clue-chip">while</span>
+      <span class="clue-chip">keep asking</span>
+      <span class="clue-chip">not known in advance</span>
+      <span class="clue-chip">until STOP</span>
+      <span class="clue-chip">valid value</span>
+      <span class="clue-chip">at least once</span>
+    </div>
+  </section>
+
+  <footer class="page-foot">Your choices and notes are saved on this device only.</footer>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    id: "q1",
+    title: "School Attendance",
+    marks: "3 marks",
+    scenario: "A school records attendance for every student in a class of 35 students. The program must:",
+    bullets: ["ask for the attendance status of each student", "count the number of students who are absent", "output the total number absent"],
+    clue: "a fixed, known number — 35 students"
+  },
+  {
+    id: "q2",
+    title: "ATM PIN",
+    marks: "3 marks",
+    scenario: "An ATM asks a customer to enter their PIN. The customer has an unlimited number of attempts until the correct PIN is entered. The program must not continue until the correct PIN has been entered.",
+    clue: "no known number of attempts — repeats until a condition is met"
+  },
+  {
+    id: "q3",
+    title: "Examination Mark",
+    marks: "3 marks",
+    scenario: "A teacher enters a student's examination mark. The mark must be between 0 and 100 inclusive. If an invalid mark is entered, the program must ask again. The teacher must enter a value at least once.",
+    clue: "must run at least once, then check validity"
+  },
+  {
+    id: "q4",
+    title: "Online Shopping",
+    marks: "3 marks",
+    scenario: "An online shop has 12 orders waiting to be processed. For each order, the program must:",
+    bullets: ["input the order value", "calculate the total value of all orders", "count how many orders are worth more than 2,000 baht"],
+    clue: "a fixed, known number — 12 orders"
+  },
+  {
+    id: "q5",
+    title: "Warehouse Scanner",
+    marks: "3 marks",
+    scenario: "A warehouse worker scans products as they are loaded onto a delivery truck. The number of products is not known in advance. The worker enters the product code for each item. Entering END means that there are no more products. The program must then output the number of products scanned.",
+    clue: "unknown count — stops on a sentinel value"
+  },
+  {
+    id: "q6",
+    title: "Game Character Creation",
+    marks: "3 marks",
+    scenario: "A game asks the player to choose a username. The username must contain at least 5 characters. The program must:",
+    bullets: ["ask the player for a username", "check whether it is valid", "ask again if it is invalid", "continue until a valid username is entered"],
+    clue: "must ask at least once, then validate"
+  },
+  {
+    id: "q7",
+    title: "Robot Battery Monitoring",
+    marks: "3 marks",
+    scenario: "A delivery robot starts with a battery level of 100%. The robot completes one delivery at a time. After each delivery, the battery level decreases. The number of deliveries the robot can complete is not known in advance. The robot must continue making deliveries while the battery level is above 20%.",
+    clue: "condition checked before each delivery — could be zero deliveries if it starts below 20%"
+  },
+  {
+    id: "q8",
+    title: "School Cafeteria",
+    marks: "3 marks",
+    scenario: "A cafeteria has 200 students buying lunch. For every student, the program must:",
+    bullets: ["input the amount paid", "calculate the total money collected", "count how many students paid more than 100 baht"],
+    clue: "a fixed, known number — 200 students"
+  },
+  {
+    id: "q9",
+    title: "Temperature Sensor",
+    marks: "3 marks",
+    scenario: "A computer receives temperature readings from a sensor. The sensor keeps sending readings until the temperature reaches 80°C or higher. The program must record how many readings were received before the temperature reached 80°C.",
+    clue: "unknown number of readings — stops when a threshold is reached"
+  }
+];
+
+const EXTRA_QUESTIONS = [
+  {
+    id: "q11",
+    title: "Vending Machine Stock",
+    marks: "3 marks",
+    scenario: "A vending machine dispenses cans of soda. It keeps selling cans while there is still stock remaining. The number of customers who will buy a can before the machine empties is not known in advance.",
+    clue: "condition checked before each sale — could sell zero cans if it starts empty"
+  },
+  {
+    id: "q12",
+    title: "Weather Station",
+    marks: "3 marks",
+    scenario: "A weather station keeps taking humidity readings while the humidity stays below 60%. As soon as a reading reaches 60% or higher, it stops taking readings and sounds an alert.",
+    clue: "condition checked before each reading — could stop immediately if already 60% or higher"
+  },
+  {
+    id: "q13",
+    title: "Boss Fight Health",
+    marks: "3 marks",
+    scenario: "In a game, a boss character keeps attacking the player while the boss's health remains above 0. Each attack reduces the boss's health by a random amount. The number of attacks is not known in advance.",
+    clue: "condition checked before each attack — the fight could already be over"
+  },
+  {
+    id: "q14",
+    title: "Password Confirmation",
+    marks: "3 marks",
+    scenario: "A signup form asks the user to type their password, then type it again to confirm. If the two entries do not match, the form asks the user to try again. The user must be asked at least once.",
+    clue: "must ask at least once, then check afterwards whether it matches"
+  },
+  {
+    id: "q15",
+    title: "Dice Game",
+    marks: "3 marks",
+    scenario: "A player keeps rolling a die until they roll a 6. Every roll counts, including the first one, and the player always rolls at least once before the game can end.",
+    clue: "the roll always happens first — the check only comes after"
+  },
+  {
+    id: "q16",
+    title: "Restaurant Menu",
+    marks: "3 marks",
+    scenario: "A self-service kiosk displays a food menu and asks the customer to enter a menu number. If the number entered does not match an item on the menu, the kiosk displays the menu again and asks once more. The menu must be shown at least once.",
+    clue: "must display and ask at least once, then validate what was entered"
+  }
+];
+
+const questionsEl = document.getElementById("questions");
+const STORAGE_KEY = "loop-challenge-answers-v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* storage unavailable — continue without persistence */ }
+}
+
+let state = loadState();
+
+function updateProgress() {
+  const total = 16; // 9 scenario questions + final challenge + 6 extra practice
+  let answered = 0;
+  QUESTIONS.forEach(q => { if (state[q.id] && state[q.id].loop) answered++; });
+  EXTRA_QUESTIONS.forEach(q => { if (state[q.id] && state[q.id].loop) answered++; });
+  if (state.q10 && state.q10.loop) answered++;
+  document.getElementById("progress-label").textContent = answered + " / " + total + " answered";
+  document.getElementById("progress-fill").style.width = (answered / total * 100) + "%";
+}
+
+const PSEUDO_SKELETONS = {
+  FOR: "FOR i <- 1 TO n\n  ...\nNEXT i",
+  WHILE: "WHILE condition\n  ...\nENDWHILE",
+  REPEAT: "REPEAT\n  ...\nUNTIL condition"
+};
+
+function makeChoiceRow(qid, onSelect) {
+  const row = document.createElement("div");
+  row.className = "choice-row";
+  ["FOR", "WHILE", "REPEAT"].forEach(loop => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "choice-btn";
+    btn.dataset.loop = loop;
+    btn.textContent = loop === "REPEAT" ? "REPEAT UNTIL" : loop;
+    if (state[qid] && state[qid].loop === loop) btn.classList.add("active");
+    btn.addEventListener("click", () => {
+      row.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      state[qid] = state[qid] || {};
+      state[qid].loop = loop;
+      saveState(state);
+      updateProgress();
+      if (onSelect) onSelect(loop);
+    });
+    row.appendChild(btn);
+  });
+  return row;
+}
+
+function renderQuestion(q, index, container) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  let bulletsHtml = "";
+  if (q.bullets) {
+    bulletsHtml = "<ul>" + q.bullets.map(b => "<li>" + b + "</li>").join("") + "</ul>";
+  }
+
+  card.innerHTML = `
+    <div class="card-top">
+      <span class="qnum">Question ${index}</span>
+      <span class="marks">${q.marks}</span>
+    </div>
+    <h2>${q.title}</h2>
+    <p class="scenario">${q.scenario}${bulletsHtml}</p>
+    <span class="clue-tag">clue: ${q.clue}</span>
+  `;
+
+  const choiceRow = makeChoiceRow(q.id, (loop) => {
+    pseudoArea.placeholder = PSEUDO_SKELETONS[loop];
+  });
+  card.appendChild(choiceRow);
+
+  const label = document.createElement("span");
+  label.className = "field-label";
+  label.textContent = "Explain your choice";
+  card.appendChild(label);
+
+  const textarea = document.createElement("textarea");
+  textarea.placeholder = "Why does this scenario need that loop?";
+  textarea.value = (state[q.id] && state[q.id].note) || "";
+  textarea.addEventListener("input", () => {
+    state[q.id] = state[q.id] || {};
+    state[q.id].note = textarea.value;
+    saveState(state);
+  });
+  card.appendChild(textarea);
+
+  const pseudoHead = document.createElement("div");
+  pseudoHead.className = "pseudo-head";
+  pseudoHead.innerHTML = `<span class="field-label">Write the pseudocode</span><span class="step4-tag">step 4 — only after step 3</span>`;
+  card.appendChild(pseudoHead);
+
+  const pseudoArea = document.createElement("textarea");
+  pseudoArea.className = "pseudocode";
+  const savedLoop = state[q.id] && state[q.id].loop;
+  pseudoArea.placeholder = savedLoop ? PSEUDO_SKELETONS[savedLoop] : "Choose a loop above, then sketch your pseudocode here";
+  pseudoArea.spellcheck = false;
+  pseudoArea.value = (state[q.id] && state[q.id].pseudocode) || "";
+  pseudoArea.addEventListener("input", () => {
+    state[q.id] = state[q.id] || {};
+    state[q.id].pseudocode = pseudoArea.value;
+    saveState(state);
+  });
+  card.appendChild(pseudoArea);
+
+  container.appendChild(card);
+}
+
+QUESTIONS.forEach((q, i) => renderQuestion(q, i + 1, questionsEl));
+
+const extraQuestionsEl = document.getElementById("extra-questions");
+EXTRA_QUESTIONS.forEach((q, i) => renderQuestion(q, i + 1, extraQuestionsEl));
+
+// Final challenge — Question 10
+const finalCard = document.createElement("div");
+finalCard.className = "card final";
+finalCard.innerHTML = `
+  <div class="card-top">
+    <span class="qnum">Final Exam Challenge · Question 10</span>
+    <span class="marks">5 marks</span>
+  </div>
+  <h2>Airport Security</h2>
+  <p class="scenario">An airport security system processes passengers one at a time. The number of passengers waiting in the queue is not known. For each passenger, their passport number is entered, their security status is entered, and the program counts passengers who pass security. The system stops processing when the security officer enters STOP. The program must then output the total number of passengers who passed security.</p>
+  <span class="clue-tag">clue: unknown queue length — stops on a sentinel entry</span>
+`;
+
+const finalChoiceRow = makeChoiceRow("q10");
+finalCard.appendChild(finalChoiceRow);
+
+const finalGrid = document.createElement("div");
+finalGrid.className = "final-grid";
+finalGrid.style.marginTop = "16px";
+
+const finalFields = [
+  { key: "sentinel", label: "What value acts as the sentinel?", placeholder: "e.g. the value that ends the loop" },
+  { key: "stopwhen", label: "When should the loop stop?", placeholder: "Describe the stopping condition" },
+  { key: "beforeloop", label: "What must be stored in a variable before the loop begins?", placeholder: "e.g. a counter set to zero" }
+];
+
+finalFields.forEach(f => {
+  const label = document.createElement("span");
+  label.className = "field-label";
+  label.textContent = f.label;
+  finalGrid.appendChild(label);
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = f.placeholder;
+  input.value = (state.q10 && state.q10[f.key]) || "";
+  input.addEventListener("input", () => {
+    state.q10 = state.q10 || {};
+    state.q10[f.key] = input.value;
+    saveState(state);
+  });
+  finalGrid.appendChild(input);
+});
+
+finalCard.appendChild(finalGrid);
+
+const finalPseudoHead = document.createElement("div");
+finalPseudoHead.className = "pseudo-head";
+finalPseudoHead.style.marginTop = "16px";
+finalPseudoHead.innerHTML = `<span class="field-label">Write the pseudocode</span><span class="step4-tag">step 4 — only after step 3</span>`;
+finalCard.appendChild(finalPseudoHead);
+
+const finalPseudoArea = document.createElement("textarea");
+finalPseudoArea.className = "pseudocode";
+finalPseudoArea.placeholder = "REPEAT\n  ...\nUNTIL passportNumber = \"STOP\"";
+finalPseudoArea.spellcheck = false;
+finalPseudoArea.value = (state.q10 && state.q10.pseudocode) || "";
+finalPseudoArea.addEventListener("input", () => {
+  state.q10 = state.q10 || {};
+  state.q10.pseudocode = finalPseudoArea.value;
+  saveState(state);
+});
+finalCard.appendChild(finalPseudoArea);
+
+questionsEl.appendChild(finalCard);
+
+updateProgress();
+</script>
+</body>
+</html>
