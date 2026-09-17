@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 — Loop Systems | IGCSE Computer Science</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #14181f;
+    --bg-raised: #1b212b;
+    --bg-panel: #1f2632;
+    --line: #2c3543;
+    --line-soft: #232b37;
+    --text: #e6e9ee;
+    --text-dim: #98a2b3;
+    --text-faint: #64707f;
+    --amber: #e8a33d;
+    --amber-dim: #6b5327;
+    --green: #6fcf97;
+    --violet: #b39ddb;
+    --violet-dim: #4a4066;
+    --red: #e08585;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.55;
+    padding-bottom: 80px;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position: sticky;
+    top:0;
+    z-index: 50;
+    background: rgba(20,24,31,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .dot{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--amber);
+    display:inline-block;
+    box-shadow: 0 0 0 3px var(--amber-dim);
+  }
+  .brand-text{
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .brand-text b{ color: var(--text); font-weight:600; }
+
+  .mode-switch{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+  .mode-label{ color: var(--text-faint); transition: color .2s; }
+  .mode-label.active{ color: var(--text); }
+  .page-link{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-dim);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: color .15s, border-color .15s;
+  }
+  .page-link:hover{ color: var(--text); border-color: var(--text-faint); }
+  .switch{
+    position: relative;
+    width: 46px;
+    height: 24px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    cursor: pointer;
+    flex-shrink:0;
+  }
+  .switch .knob{
+    position:absolute;
+    top: 2px; left: 2px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green);
+    transition: transform .22s ease, background .22s ease;
+  }
+  body[data-mode="teacher"] .switch .knob{
+    transform: translateX(22px);
+    background: var(--violet);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 56px 24px 28px;
+  }
+  .hero-eyebrow{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--amber);
+    margin: 0 0 10px;
+  }
+  .hero h1{
+    font-family: var(--mono);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    margin: 0 0 14px;
+    line-height: 1.25;
+    color: var(--text);
+  }
+  .hero p{
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 62ch;
+    margin: 0 0 22px;
+  }
+  .hero-note{
+    display:inline-flex;
+    gap: 8px;
+    align-items:flex-start;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    border-left: 2px solid var(--line);
+    padding-left: 12px;
+  }
+  body[data-mode="teacher"] .hero-note{ border-left-color: var(--violet-dim); }
+
+  /* ---------- Overview table ---------- */
+  .overview{
+    max-width: 880px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .overview-card{
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow:hidden;
+    background: var(--bg-raised);
+  }
+  table{ width:100%; border-collapse: collapse; font-size: 14px; }
+  thead th{
+    text-align:left;
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--text-faint);
+    font-size: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  tbody td{
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--text-dim);
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover td{ background: rgba(255,255,255,0.015); }
+  td.num{
+    font-family: var(--mono);
+    color: var(--text-faint);
+    width: 28px;
+  }
+  td.scenario{ color: var(--text); font-weight: 500; }
+  .stars{ color: var(--amber); letter-spacing: 1px; font-size: 12px; }
+  .stars .off{ color: var(--line); }
+  a.jump{ color: var(--text); text-decoration:none; border-bottom: 1px dotted var(--text-faint); }
+  a.jump:hover{ border-bottom-color: var(--amber); }
+
+  /* ---------- Challenge cards ---------- */
+  .stack{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display:flex;
+    flex-direction:column;
+    gap: 28px;
+  }
+
+  .card{
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-raised);
+    scroll-margin-top: 90px;
+    overflow:hidden;
+  }
+  .card-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 16px;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .card-head-left{ display:flex; gap:14px; align-items:flex-start; }
+  .card-index{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-faint);
+    padding-top: 3px;
+    min-width: 20px;
+  }
+  .card-title{
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 5px;
+  }
+  .card-focus{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--amber);
+  }
+  .marks{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+
+  .card-body{ padding: 20px 24px 24px; }
+  .card-body p{ margin: 0 0 14px; color: var(--text-dim); font-size: 14.5px; }
+  .card-body p:last-child{ margin-bottom:0; }
+  .card-body strong{ color: var(--text); font-weight:600; }
+
+  .facts{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
+    margin: 4px 0 16px;
+  }
+  .fact{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    color: var(--text-dim);
+    padding: 5px 10px;
+    border-radius: 6px;
+  }
+
+  ol.task{
+    margin: 0 0 16px;
+    padding-left: 20px;
+    color: var(--text-dim);
+    font-size: 14.5px;
+  }
+  ol.task li{ margin-bottom: 6px; }
+  ol.task li::marker{ color: var(--text-faint); font-family: var(--mono); }
+
+  .block-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: none;
+    color: var(--text-faint);
+    margin: 18px 0 8px;
+  }
+
+  pre{
+    margin: 0;
+    background: #0f1319;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: #c9d1d9;
+  }
+  pre.example{ border-left: 3px solid var(--green); }
+  pre.model{ border-left: 3px solid var(--violet); }
+
+  /* Teacher-only blocks */
+  .teacher-only{
+    display: none;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--violet-dim);
+  }
+  body[data-mode="teacher"] .teacher-only{ display:block; }
+
+  .teacher-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--violet);
+    margin-bottom: 10px;
+  }
+  .teacher-tag::before{
+    content:"";
+    width:6px; height:6px;
+    border-radius:50%;
+    background: var(--violet);
+    display:inline-block;
+  }
+
+  .key-idea{
+    background: rgba(179,157,219,0.06);
+    border: 1px solid var(--violet-dim);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .key-idea strong{ color: var(--violet); }
+
+  .student-only{ display:block; }
+  body[data-mode="teacher"] .student-only.hide-in-teacher{ display:none; }
+
+  .answer-space{
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    min-height: 90px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-faint);
+    display:flex;
+    align-items:flex-start;
+  }
+  body[data-mode="teacher"] .answer-space{ display:none; }
+
+  .question-box{
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .question-box p{ margin:0 0 8px; color: var(--text); font-weight:500; font-size: 14px; }
+
+  /* Footer */
+  footer{
+    max-width: 880px;
+    margin: 40px auto 0;
+    padding: 24px 24px 0;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    text-align:center;
+  }
+
+  @media (max-width: 560px){
+    .card-head{ flex-direction:column; }
+    .marks{ padding-top:0; }
+    thead th:nth-child(3), tbody td:nth-child(3){ display:none; }
+  }
+</style>
+</head>
+<body data-mode="student" data-fixed="true">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="brand-text"><b>Core 1</b> · Week 4 · Loop Systems · Student</span>
+    </div>
+    <a class="page-link" href="igcse-week4-loops-teacher.html">Teacher version →</a>
+  </div>
+
+  <div class="hero">
+    <p class="hero-eyebrow">IGCSE Computer Science 0478 — Iteration</p>
+    <h1>Five systems. Three loop types. One question every time: what keeps this running?</h1>
+    <p>Each challenge below is a small real-world system — a robot, a game, a locker, a canteen, a sensor — that needs a loop to work. Write the Cambridge pseudocode for each one before checking the example output.</p>
+    <div class="hero-note">Work through each system in order — the last one combines everything before it.</div>
+  </div>
+
+  <div class="overview">
+    <div class="overview-card">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Scenario</th><th>Concept</th><th>Difficulty</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="scenario"><a class="jump" href="#c1">Robot Battery</a></td><td>WHILE</td><td><span class="stars">★★<span class="off">★★★</span></span></td></tr>
+          <tr><td class="num">2</td><td class="scenario"><a class="jump" href="#c2">Arcade Game</a></td><td>Sentinel + WHILE</td><td><span class="stars">★★★<span class="off">★★</span></span></td></tr>
+          <tr><td class="num">3</td><td class="scenario"><a class="jump" href="#c3">Locker PIN</a></td><td>REPEAT...UNTIL</td><td><span class="stars">★★★<span class="off">★★</span></span></td></tr>
+          <tr><td class="num">4</td><td class="scenario"><a class="jump" href="#c4">Canteen Order</a></td><td>Validation</td><td><span class="stars">★★★★<span class="off">★</span></span></td></tr>
+          <tr><td class="num">5</td><td class="scenario"><a class="jump" href="#c5">Classroom Sensor</a></td><td>Sentinel + selection + counter</td><td><span class="stars">★★★★★</span></td></tr>
+          <tr><td class="num">B</td><td class="scenario"><a class="jump" href="#c6">Warehouse Robot</a></td><td>Compound condition</td><td><span class="stars">★★★★★</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="stack">
+
+    <!-- Challenge 1 -->
+    <section class="card" id="c1">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">01</span>
+          <div>
+            <h2 class="card-title">Robot Battery Monitor</h2>
+            <span class="card-focus">Focus: WHILE</span>
+          </div>
+        </div>
+        <span class="marks">6 marks</span>
+      </div>
+      <div class="card-body">
+        <p>A delivery robot starts with a battery level of <strong>100%</strong>. Every time it moves forward, its battery drops by <strong>10%</strong>. It should keep moving while its battery is <strong>greater than 20%</strong>.</p>
+        <div class="facts">
+          <span class="fact">Battery ← 100</span>
+          <span class="fact">decrease by 10 each move</span>
+          <span class="fact">stop condition: Battery ≤ 20</span>
+        </div>
+        <p class="block-label">Task</p>
+        <ol class="task">
+          <li>Set the battery to 100.</li>
+          <li>Repeatedly display the battery level.</li>
+          <li>Display "Robot moving".</li>
+          <li>Decrease the battery by 10.</li>
+          <li>Stop when the battery is 20 or less.</li>
+          <li>Display "Robot needs charging".</li>
+        </ol>
+        <p class="block-label">Example output</p>
+        <pre class="example">Battery: 100
+Robot moving
+
+Battery: 90
+Robot moving
+
+Battery: 80
+Robot moving
+
+...
+
+Battery: 30
+Robot moving
+
+Robot needs charging</pre>
+
+        <div class="answer-space">Write your pseudocode here.</div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Key idea:</strong> WHILE Battery &gt; 20 — students must see that the condition is checked <em>before</em> each movement, not after.</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">Battery ← 100
+
+WHILE Battery > 20
+    OUTPUT "Battery: ", Battery
+    OUTPUT "Robot moving"
+    Battery ← Battery - 10
+ENDWHILE
+
+OUTPUT "Robot needs charging"</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Challenge 2 -->
+    <section class="card" id="c2">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">02</span>
+          <div>
+            <h2 class="card-title">Arcade Game: Keep Playing</h2>
+            <span class="card-focus">Focus: WHILE + sentinel</span>
+          </div>
+        </div>
+        <span class="marks">7 marks</span>
+      </div>
+      <div class="card-body">
+        <p>The player starts with <strong>Score ← 0</strong> and enters the points earned after each round. Entering <strong>-1</strong> means they want to stop playing.</p>
+        <div class="facts">
+          <span class="fact">Score ← 0</span>
+          <span class="fact">sentinel: -1</span>
+          <span class="fact">sentinel not added to score</span>
+        </div>
+        <p class="block-label">Task</p>
+        <ol class="task">
+          <li>Set the score to 0.</li>
+          <li>Ask the player for points.</li>
+          <li>Continue accepting points while the input is not -1.</li>
+          <li>Add the points to the score.</li>
+          <li>Ask for the next score.</li>
+          <li>Display the final score.</li>
+        </ol>
+        <p class="block-label">Example output</p>
+        <pre class="example">Enter points: 20
+Enter points: 50
+Enter points: 30
+Enter points: -1
+
+Final score: 100</pre>
+
+        <div class="answer-space">Write your pseudocode here.</div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Key idea:</strong> -1 is a sentinel value meaning "stop entering data" — it must never be added to the score. Watch for students who add it before checking.</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">Score ← 0
+INPUT Points
+
+WHILE Points <> -1
+    Score ← Score + Points
+    INPUT Points
+ENDWHILE
+
+OUTPUT "Final score: ", Score</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Challenge 3 -->
+    <section class="card" id="c3">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">03</span>
+          <div>
+            <h2 class="card-title">School Locker PIN</h2>
+            <span class="card-focus">Focus: REPEAT...UNTIL + validation</span>
+          </div>
+        </div>
+        <span class="marks">5 + 2 marks</span>
+      </div>
+      <div class="card-body">
+        <p>A school locker uses the 4-digit PIN <strong>4729</strong>. The student enters a PIN; if it's wrong, the program asks again.</p>
+        <div class="facts">
+          <span class="fact">correct PIN: 4729</span>
+          <span class="fact">asks at least once</span>
+        </div>
+        <p class="block-label">Task</p>
+        <ol class="task">
+          <li>Ask the student to enter the PIN.</li>
+          <li>Check whether it is correct.</li>
+          <li>Continue asking until the correct PIN is entered.</li>
+          <li>Display "Locker opened".</li>
+        </ol>
+        <p class="block-label">Example output</p>
+        <pre class="example">Enter PIN: 1234
+Incorrect
+
+Enter PIN: 5555
+Incorrect
+
+Enter PIN: 4729
+Locker opened</pre>
+
+        <div class="question-box">
+          <p>Why is REPEAT...UNTIL a good choice here? <span style="color:var(--text-faint); font-weight:400;">(2 marks)</span></p>
+          <div class="answer-space" style="min-height:50px;">Your answer here.</div>
+        </div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Expected idea:</strong> the student must enter a PIN at least once, so a post-condition loop (REPEAT...UNTIL) fits — a WHILE loop would need an extra "priming" input before the loop.</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">REPEAT
+    OUTPUT "Enter PIN: "
+    INPUT PIN
+    IF PIN <> 4729 THEN
+        OUTPUT "Incorrect"
+    ENDIF
+UNTIL PIN = 4729
+
+OUTPUT "Locker opened"</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Challenge 4 -->
+    <section class="card" id="c4">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">04</span>
+          <div>
+            <h2 class="card-title">Canteen Order System</h2>
+            <span class="card-focus">Focus: REPEAT...UNTIL + validation</span>
+          </div>
+        </div>
+        <span class="marks">7 marks</span>
+      </div>
+      <div class="card-body">
+        <p>The canteen menu is <strong>1 = Burger, 2 = Pizza, 3 = Sandwich, 4 = Exit</strong>. The program should keep asking until the student enters a valid option from 1 to 4.</p>
+        <div class="facts">
+          <span class="fact">valid range: 1–4</span>
+        </div>
+        <p class="block-label">Task</p>
+        <ol class="task">
+          <li>Display the four options.</li>
+          <li>Get the student's choice.</li>
+          <li>Continue asking if the choice is invalid.</li>
+          <li>Stop when a value from 1 to 4 is entered.</li>
+          <li>Output "Order accepted".</li>
+        </ol>
+        <p class="block-label">Example output</p>
+        <pre class="example">1. Burger
+2. Pizza
+3. Sandwich
+4. Exit
+
+Enter choice: 8
+Invalid choice
+
+Enter choice: 0
+Invalid choice
+
+Enter choice: 2
+Order accepted</pre>
+
+        <div class="answer-space">Write your pseudocode here.</div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Key idea:</strong> the compound condition <code>Choice &gt;= 1 AND Choice &lt;= 4</code> combined with REPEAT...UNTIL. Good place to check students don't invert the logic (looping while invalid vs. until valid).</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">REPEAT
+    OUTPUT "1. Burger"
+    OUTPUT "2. Pizza"
+    OUTPUT "3. Sandwich"
+    OUTPUT "4. Exit"
+    INPUT Choice
+    IF Choice < 1 OR Choice > 4 THEN
+        OUTPUT "Invalid choice"
+    ENDIF
+UNTIL Choice >= 1 AND Choice <= 4
+
+OUTPUT "Order accepted"</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Challenge 5 -->
+    <section class="card" id="c5">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">05</span>
+          <div>
+            <h2 class="card-title">Smart Classroom Temperature System</h2>
+            <span class="card-focus">Focus: WHILE + sentinel + calculation</span>
+          </div>
+        </div>
+        <span class="marks">12 marks</span>
+      </div>
+      <div class="card-body">
+        <p>A classroom temperature sensor sends readings. Entering <strong>-999</strong> means the sensor has stopped. For every temperature: if it's greater than 30, output "Too hot", otherwise "Temperature OK". The program should also count how many readings were received.</p>
+        <div class="facts">
+          <span class="fact">sentinel: -999</span>
+          <span class="fact">threshold: &gt; 30</span>
+          <span class="fact">count valid readings</span>
+        </div>
+        <p class="block-label">Task</p>
+        <ol class="task">
+          <li>Create a counter.</li>
+          <li>Get the first temperature.</li>
+          <li>Use a WHILE loop.</li>
+          <li>Stop when -999 is entered.</li>
+          <li>Count valid readings.</li>
+          <li>Check whether each temperature is greater than 30.</li>
+          <li>Get the next temperature.</li>
+          <li>Display the number of readings.</li>
+        </ol>
+        <p class="block-label">Example output</p>
+        <pre class="example">Temperature: 25
+Temperature OK
+
+Temperature: 32
+Too hot
+
+Temperature: 29
+Temperature OK
+
+Temperature: 34
+Too hot
+
+Temperature: -999
+
+Readings received: 4</pre>
+
+        <div class="answer-space">Write your pseudocode here.</div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Key idea:</strong> this stacks three skills at once — sentinel-controlled WHILE, a nested IF for selection, and a running counter. Strong students should get the counter incrementing before the sentinel check, not after.</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">Count ← 0
+INPUT Temperature
+
+WHILE Temperature <> -999
+    Count ← Count + 1
+    IF Temperature > 30 THEN
+        OUTPUT "Too hot"
+    ELSE
+        OUTPUT "Temperature OK"
+    ENDIF
+    INPUT Temperature
+ENDWHILE
+
+OUTPUT "Readings received: ", Count</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bonus Challenge -->
+    <section class="card" id="c6">
+      <div class="card-head">
+        <div class="card-head-left">
+          <span class="card-index">B</span>
+          <div>
+            <h2 class="card-title">Bonus — Robot Warehouse</h2>
+            <span class="card-focus">Focus: compound condition, two exit routes</span>
+          </div>
+        </div>
+        <span class="marks">12 marks</span>
+      </div>
+      <div class="card-body">
+        <p>A warehouse robot starts with battery <strong>100</strong>. After each movement the operator enters a command: <strong>F</strong> = forward, <strong>L</strong> = turn left, <strong>R</strong> = turn right, <strong>Q</strong> = quit. Each movement reduces the battery by 10. The robot keeps operating while the command is not Q <strong>and</strong> the battery is greater than 20.</p>
+        <div class="facts">
+          <span class="fact">Battery ← 100</span>
+          <span class="fact">exit 1: Command = "Q"</span>
+          <span class="fact">exit 2: Battery ≤ 20</span>
+        </div>
+        <p class="block-label">Expected behaviour</p>
+        <p>If the battery becomes 20 or less: display "Battery low" then "Robot stopped". If the operator enters Q: display "Operator stopped robot".</p>
+
+        <div class="answer-space">Write your complete pseudocode here.</div>
+
+        <div class="teacher-only">
+          <span class="teacher-tag">Teaching note</span>
+          <div class="key-idea"><strong>Key idea:</strong> two independent reasons the loop can end. After the loop, students must test <em>which</em> condition caused the exit — <code>Command = "Q"</code> versus <code>Battery &lt;= 20</code> — and report the correct message. This is the step most students miss.</div>
+          <p class="block-label">Model structure</p>
+          <pre class="model">Battery ← 100
+INPUT Command
+
+WHILE Command <> "Q" AND Battery > 20
+
+    OUTPUT "Command: ", Command
+
+    IF Command = "F" THEN
+        OUTPUT "Moving forward"
+    ENDIF
+
+    IF Command = "L" THEN
+        OUTPUT "Turning left"
+    ENDIF
+
+    IF Command = "R" THEN
+        OUTPUT "Turning right"
+    ENDIF
+
+    Battery ← Battery - 10
+    INPUT Command
+
+ENDWHILE
+
+IF Command = "Q" THEN
+    OUTPUT "Operator stopped robot"
+ELSE
+    OUTPUT "Battery low"
+    OUTPUT "Robot stopped"
+ENDIF</pre>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    IGCSE Computer Science 0478 · Core 1 · Week 4 — Iteration
+  </footer>
+
+
+</body>
+</html>
