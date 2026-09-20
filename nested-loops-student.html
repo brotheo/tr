@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Nested loops challenges</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet"><style>
+*,*::before,*::after{box-sizing:border-box}
+:root{--page:#e8edf2;--sheet:#ffffff;--ink:#17212b;--muted:#4f5d6c;--rule:#c9d3dd;--accent:#1d4f91;--accent-ink:#ffffff;--code-bg:#f2f5f9;--ans-bg:#eaf5ee;--ans-edge:#2b7a55;--ans-ink:#12402b;--k:#1d4f91;--s:#1c6b45;--n:#96560a;--a:#7a3fa0; box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0f1419;--sheet:#182028;--ink:#e4e9ee;--muted:#97a4b1;--rule:#2f3b47;--accent:#86b3ef;--accent-ink:#0f1419;--code-bg:#10161c;--ans-bg:#14291f;--ans-edge:#4fb27f;--ans-ink:#cfeadb;--k:#86b3ef;--s:#7fd0a3;--n:#e2b25c;--a:#c9a2ea;}}
+:root[data-theme="dark"]{--page:#0f1419;--sheet:#182028;--ink:#e4e9ee;--muted:#97a4b1;--rule:#2f3b47;--accent:#86b3ef;--accent-ink:#0f1419;--code-bg:#10161c;--ans-bg:#14291f;--ans-edge:#4fb27f;--ans-ink:#cfeadb;--k:#86b3ef;--s:#7fd0a3;--n:#e2b25c;--a:#c9a2ea;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:1.0625rem;line-height:1.6}
+.sheet{max-width:820px;margin:1.5rem auto;background:var(--sheet);padding:clamp(1.25rem,4vw,3rem);border:1px solid var(--rule);border-radius:6px}
+@media(max-width:860px){.sheet{margin:0;border-radius:0;border-left:0;border-right:0}}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem clamp(1rem,4vw,2rem);background:var(--accent);color:var(--accent-ink);font-weight:700}
+.bar button{font:inherit;font-weight:700;padding:.3rem .9rem;border:2px solid currentColor;background:transparent;color:inherit;border-radius:4px;cursor:pointer}
+.bar button:hover{background:var(--accent-ink);color:var(--accent)}
+.bar button:focus-visible{outline:3px solid var(--accent-ink);outline-offset:3px}
+
+.cover{border-bottom:4px solid var(--accent);padding-bottom:1.25rem;margin-bottom:.5rem;display:grid;grid-template-columns:1fr auto;gap:1rem 2rem;align-items:start}
+.board{margin:0 0 .3rem;color:var(--muted);font-size:.98rem}
+h1{font-size:clamp(1.7rem,4.5vw,2.4rem);line-height:1.15;margin:0;letter-spacing:-.01em}
+.total{border:2px solid var(--ink);padding:.35rem 1rem;text-align:center;line-height:1.25;font-size:.95rem}
+.total b{display:block;font-size:1.9rem}
+.cover ul{grid-column:1/-1;margin:0;padding-left:1.2rem}
+.fields{grid-column:1/-1;display:grid;grid-template-columns:2fr 1fr 1fr;gap:1rem}
+.field{border-bottom:1.5px solid var(--ink);min-height:2rem;color:var(--muted);font-size:.9rem}
+@media(max-width:560px){.fields{grid-template-columns:1fr}.cover{grid-template-columns:1fr}.total{justify-self:start}}
+
+.q{padding:1.75rem 0}
+.q + .q{border-top:1px solid var(--rule)}
+.qhead{display:grid;grid-template-columns:auto 1fr auto;gap:.9rem;align-items:center;margin-bottom:1rem}
+.qnum{width:2.6rem;height:2.6rem;border:2px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:1.3rem}
+h2{margin:0;font-size:1.3rem;line-height:1.25}
+.qmeta{display:flex;gap:.6rem;align-items:center}
+.level{font-size:.85rem;border:1.5px solid var(--accent);color:var(--accent);padding:.05rem .65rem;border-radius:99px}
+.level.hard{background:var(--accent);color:var(--accent-ink)}
+.mk{font-weight:700;border:1.5px solid var(--ink);padding:.05rem .5rem}
+.qbody{padding-left:3.5rem}
+@media(max-width:560px){.qhead{grid-template-columns:auto 1fr}.qmeta{grid-column:1/-1}.qbody{padding-left:0}}
+.qbody p{margin:.6rem 0;max-width:68ch}
+.qbody ul{margin:.5rem 0;padding-left:1.3rem;max-width:68ch}
+.do{font-weight:700}
+blockquote{margin:.9rem 0;padding:.6rem 1rem;border-left:4px solid var(--accent);background:var(--code-bg)}
+
+pre,code{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+code{font-size:.9em;background:var(--code-bg);padding:.05em .3em;border-radius:3px}
+pre{margin:0;padding:.75rem 1rem;background:var(--code-bg);border:1px solid var(--rule);border-radius:4px;overflow-x:auto;font-size:.95rem;line-height:1.5}
+.fig{margin:1rem 0}
+figcaption{font-size:.9rem;color:var(--muted);margin-bottom:.25rem}
+pre.out{border-left:4px solid var(--accent)}
+.k{color:var(--k);font-weight:500}.s{color:var(--s)}.n{color:var(--n)}.a{color:var(--a)}
+
+h3{font-size:1.02rem;margin:1.25rem 0 .4rem}
+ol.scheme{list-style:none;counter-reset:s;padding:0;margin:0;max-width:68ch}
+ol.scheme li{counter-increment:s;display:flex;gap:.7rem;padding:.35rem 0;border-bottom:1px dotted var(--rule)}
+ol.scheme li::before{content:counter(s) ".";width:1.3rem;flex:none;color:var(--muted)}
+ol.scheme li span{flex:1}
+ol.scheme li b{flex:none}
+
+.answer{margin-top:1.5rem;background:var(--ans-bg);border-left:5px solid var(--ans-edge);padding:1rem 1.25rem 1.1rem;border-radius:0 6px 6px 0;color:var(--ans-ink)}
+.answer h3{margin:0 0 .5rem;font-size:1.1rem}
+.answer h4{margin:1.1rem 0 .35rem;font-size:.98rem}
+.answer pre{background:var(--sheet);color:var(--ink)}
+.answer code{background:var(--sheet);color:var(--ink)}
+.answer p{margin:.3rem 0;max-width:68ch}
+.answer figcaption{color:var(--ans-ink)}
+.answer ol.scheme li{border-bottom-color:var(--ans-edge)}
+.answer ol.scheme li::before{color:var(--ans-ink)}
+.answers-hidden .answer{display:none}
+
+.summary{margin-top:1rem;padding-top:1.5rem;border-top:4px solid var(--accent)}
+.summary h2{margin-bottom:.75rem}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.98rem}
+th,td{padding:.5rem .6rem;border-bottom:1px solid var(--rule);text-align:left}
+th{border-bottom:2px solid var(--ink)}
+th.n,td.n{text-align:right}
+tfoot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+td.blank{min-width:6rem;border-left:1px dotted var(--rule)}
+
+@media print{
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--page:#e8edf2;--sheet:#ffffff;--ink:#17212b;--muted:#4f5d6c;--rule:#c9d3dd;--accent:#1d4f91;--accent-ink:#ffffff;--code-bg:#f2f5f9;--ans-bg:#eaf5ee;--ans-edge:#2b7a55;--ans-ink:#12402b;--k:#1d4f91;--s:#1c6b45;--n:#96560a;--a:#7a3fa0; padding:0}
+body{background:#fff}
+.bar{display:none}
+.sheet{border:0;margin:0;padding:0;max-width:none}
+.q{break-inside:avoid}
+}
+</style></head><body><main class="sheet"><header class="cover"><div><p class="board">Cambridge IGCSE Computer Science 0478</p><h1>Nested loops: pseudocode challenges</h1></div><div class="total"><b>20</b>marks</div><ul><li>Answer all five challenges.</li><li>Write each solution in 0478 pseudocode, then use Transpile &amp; Run to test it.</li><li>The marks for each challenge are shown in brackets, for example [4].</li></ul><div class="fields"><div class="field">Name</div><div class="field">Class</div><div class="field">Date</div></div></header><section class="q" id="c1">
+<div class="qhead"><div class="qnum" aria-hidden="true">1</div><h2>Challenge 1: Locker Rows</h2><div class="qmeta"><span class="level medium">Medium</span><span class="mk">[4]</span></div></div>
+<div class="qbody">
+<p class="do">Write 0478 pseudocode. <strong>Transpile &amp; Run.</strong></p>
+<p>Northfield School is labelling the lockers in its new sports hall. The lockers are arranged in <strong>4 rows</strong>. Each row has <strong>2 more lockers</strong> than the row before it, so row 1 has 2 lockers, row 2 has 4 lockers, row 3 has 6 lockers and row 4 has 8 lockers. The lockers in each row are numbered starting from 1.</p>
+<p>The caretaker wants a program that prints the locker numbers for each row on a separate line.</p>
+<p>Write a program that uses nested <code>FOR</code> loops to output the locker numbers for every row.</p>
+<figure class="fig"><figcaption>Expected output</figcaption><pre class="out">1 2
+1 2 3 4
+1 2 3 4 5 6
+1 2 3 4 5 6 7 8</pre></figure>
+<h3>Marking: 4 marks</h3><ol class="scheme"><li><span>Runs and produces the correct output.</span><b>[1]</b></li><li><span>Uses nested <code>FOR</code> loops.</span><b>[1]</b></li><li><span>Inner loop produces the correct number of lockers for each row.</span><b>[1]</b></li><li><span>Correct spacing and new line after each row.</span><b>[1]</b></li></ol>
+</div>
+</section>
+<section class="q" id="c2">
+<div class="qhead"><div class="qnum" aria-hidden="true">2</div><h2>Challenge 2: Robot Battery Grid</h2><div class="qmeta"><span class="level medium">Medium</span><span class="mk">[4]</span></div></div>
+<div class="qbody">
+<p class="do">Write 0478 pseudocode. <strong>Transpile &amp; Run.</strong></p>
+<p>A warehouse robot patrols a charging area made up of <strong>3 rows</strong> and <strong>4 columns</strong> of battery stations. To work out how much charge each station needs, the engineers use this rule:</p>
+<blockquote>charge units = row number × column number</blockquote>
+<p>The engineers want a table showing the charge units for every station, one row of the grid per line.</p>
+<p>Write a program that uses nested <code>FOR</code> loops to output the charge units for every station.</p>
+<figure class="fig"><figcaption>Expected output</figcaption><pre class="out">1 2 3 4
+2 4 6 8
+3 6 9 12</pre></figure>
+<h3>Marking: 4 marks</h3><ol class="scheme"><li><span>Runs and produces the correct output.</span><b>[1]</b></li><li><span>Uses nested <code>FOR</code> loops.</span><b>[1]</b></li><li><span>Correctly calculates <code>Row × Column</code>.</span><b>[1]</b></li><li><span>Produces three rows with four values in each row.</span><b>[1]</b></li></ol>
+</div>
+</section>
+<section class="q" id="c3">
+<div class="qhead"><div class="qnum" aria-hidden="true">3</div><h2>Challenge 3: Training Pyramid</h2><div class="qmeta"><span class="level hard">Hard</span><span class="mk">[4]</span></div></div>
+<div class="qbody">
+<p class="do">Write 0478 pseudocode. <strong>Transpile &amp; Run.</strong></p>
+<p>A school robotics team is preparing for a competition with <strong>5 rounds</strong> of training. The coach increases the workload each round:</p>
+<ul>
+<li>Round 1: 1 exercise</li>
+<li>Round 2: 2 exercises</li>
+<li>Round 3: 3 exercises</li>
+<li>and so on, up to round 5.</li>
+</ul>
+<p>In each round, the exercises are numbered starting from 1. The coach needs a program that lists the exercise numbers for each round on its own line. The program must also keep a running count of every exercise performed and display it at the end.</p>
+<p>Write a program that:</p>
+<ul>
+<li>uses nested <code>FOR</code> loops to output the exercise numbers for each round</li>
+<li>uses a variable called <code>Total</code> to count all the exercises performed</li>
+<li>outputs <code>TOTAL</code> followed by the value of <code>Total</code> after the last round</li>
+</ul>
+<figure class="fig"><figcaption>Expected output</figcaption><pre class="out">1
+1 2
+1 2 3
+1 2 3 4
+1 2 3 4 5
+TOTAL 15</pre></figure>
+<h3>Marking: 4 marks</h3><ol class="scheme"><li><span>Runs and produces the required output.</span><b>[1]</b></li><li><span>Uses nested <code>FOR</code> loops.</span><b>[1]</b></li><li><span>Inner loop depends on the outer loop.</span><b>[1]</b></li><li><span>Correctly counts the 15 exercises.</span><b>[1]</b></li></ol>
+</div>
+</section>
+<section class="q" id="c4">
+<div class="qhead"><div class="qnum" aria-hidden="true">4</div><h2>Challenge 4: Descending Seats</h2><div class="qmeta"><span class="level hard">Hard</span><span class="mk">[4]</span></div></div>
+<div class="qbody">
+<p class="do">Write 0478 pseudocode. <strong>Transpile &amp; Run.</strong></p>
+<p>The Grand Theatre has <strong>5 sections</strong> of seating. Section 5 is the largest and has 5 seats. Each section closer to the stage has one seat fewer, so section 1 has only 1 seat.</p>
+<p>The manager wants a simple seating plan where each <code>*</code> represents one seat. The plan starts with section 5 and finishes with section 1, with one section on each line. After the plan, the program must display the total number of seats in the theatre.</p>
+<p>Write a program that:</p>
+<ul>
+<li>uses a loop that counts <strong>down</strong> from section 5 to section 1</li>
+<li>uses a nested loop to output one <code>*</code> for each seat in the section</li>
+<li>uses a variable called <code>Total</code> to count the seats</li>
+<li>outputs <code>TOTAL</code> followed by the value of <code>Total</code> at the end</li>
+</ul>
+<figure class="fig"><figcaption>Expected output</figcaption><pre class="out">*****
+****
+***
+**
+*
+TOTAL 15</pre></figure>
+<h3>Marking: 4 marks</h3><ol class="scheme"><li><span>Runs and produces the required output.</span><b>[1]</b></li><li><span>Uses a countdown loop.</span><b>[1]</b></li><li><span>Uses a nested loop to produce the stars.</span><b>[1]</b></li><li><span>Correctly calculates <code>TOTAL 15</code>.</span><b>[1]</b></li></ol>
+</div>
+</section>
+<section class="q" id="c5">
+<div class="qhead"><div class="qnum" aria-hidden="true">5</div><h2>Challenge 5: First Available Locker</h2><div class="qmeta"><span class="level hard">Hard</span><span class="mk">[4]</span></div></div>
+<div class="qbody">
+<p class="do">Write 0478 pseudocode. <strong>Transpile &amp; Run.</strong></p>
+<p>At the end of term, a caretaker checks six lockers to see which ones are free. Locker numbers are entered into a program one at a time. A locker is <strong>available</strong> if its number is <strong>even</strong>.</p>
+<p>The six locker numbers entered are:</p>
+<figure class="fig"><figcaption>Numbers entered, in this order</figcaption><pre class="out">11, 18, 25, 31, 42, 50</pre></figure>
+<p>The caretaker only wants to know the <strong>first</strong> available locker, so the program must not output any later even numbers.</p>
+<p>Write a program that:</p>
+<ul>
+<li>uses a <code>FOR</code> loop to input the six locker numbers</li>
+<li>uses the <code>MOD</code> operator to test whether each number is even</li>
+<li>uses a Boolean variable called <code>Found</code> to make sure only the first available locker is output</li>
+</ul>
+<p><strong>Do not use <code>BREAK</code>.</strong></p>
+<figure class="fig"><figcaption>Expected output</figcaption><pre class="out">18</pre></figure>
+<h3>Marking: 4 marks</h3><ol class="scheme"><li><span>Runs and produces the correct output.</span><b>[1]</b></li><li><span>Uses the <code>Found</code> Boolean flag.</span><b>[1]</b></li><li><span>Tests whether the locker number is even using <code>MOD</code>.</span><b>[1]</b></li><li><span>Prevents later even numbers from being output.</span><b>[1]</b></li></ol>
+</div>
+</section><section class="summary"><h2>Score sheet</h2><div class="scroll"><table><thead><tr><th>Challenge</th><th>Level</th><th class="n">Marks</th><th class="n">Your score</th></tr></thead><tbody><tr><td>1. Locker Rows</td><td>Medium</td><td class="n">4</td><td class="blank"></td></tr><tr><td>2. Robot Battery Grid</td><td>Medium</td><td class="n">4</td><td class="blank"></td></tr><tr><td>3. Training Pyramid</td><td>Hard</td><td class="n">4</td><td class="blank"></td></tr><tr><td>4. Descending Seats</td><td>Hard</td><td class="n">4</td><td class="blank"></td></tr><tr><td>5. First Available Locker</td><td>Hard</td><td class="n">4</td><td class="blank"></td></tr></tbody><tfoot><tr><td colspan="2">Total</td><td class="n">20</td><td class="blank"></td></tr></tfoot></table></div></section></main></body></html>
