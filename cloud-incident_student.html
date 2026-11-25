@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud Security Incident</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: clear, calm classroom worksheet with an investigation edge.
+   IDEA: a metro line map — the mission is a route through four challenge stations to the final plan.
+   PICTURE: a thick route line with five stations at the top, each a link to its challenge.
+   COLOUR and TYPE: white, metro red/blue/amber/green + black; Figtree 800 titles, Figtree body.
+   LAYOUT: route map hero, scenario case file, challenge sections with answer boxes, plan builder. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0e1116);--ink:light-dark(#111418,#eef1f5);--mute:light-dark(#5a6270,#9aa3b2);
+--card:light-dark(#f4f6f9,#171b23);--line:light-dark(#dfe3ea,#2a303c);
+--red:#e6261f;--blue:#0a5cff;--amber:#ffb400;--green:#00a05a;--black:light-dark(#111418,#eef1f5)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.wrap{max-width:1040px;margin:0 auto}
+html{scroll-padding-top:24px;scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+h1{font-weight:800;font-size:clamp(32px,5.4vw,52px);line-height:1.05;margin:0 0 12px;text-wrap:balance}
+h2{font-weight:800;font-size:clamp(24px,3.4vw,32px);line-height:1.1;margin:0;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--mute);margin:0 0 20px}
+.meta b{color:var(--ink);font-weight:600}
+.who{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.who label{flex:1 1 240px;font-weight:600;font-size:14px}
+input,textarea{width:100%;font:16px/1.5 Figtree,system-ui,sans-serif;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:6px}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent)}
+textarea{min-height:110px;resize:vertical}
+/* route map */
+.route{position:relative;display:flex;justify-content:space-between;margin:36px 0 8px;padding:0 4px}
+.route::before{content:"";position:absolute;left:28px;right:28px;top:22px;height:12px;border-radius:6px;
+background:linear-gradient(90deg,var(--red) 0 25%,var(--blue) 25% 50%,var(--amber) 50% 75%,var(--green) 75% 100%)}
+.stop{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;width:20%;text-decoration:none;color:var(--ink)}
+.dot{width:56px;height:56px;border-radius:50%;background:var(--bg);border:9px solid var(--c);display:grid;place-items:center;font-weight:800;font-size:15px;transition:transform .2s}
+.stop:hover .dot,.stop:focus-visible .dot{transform:scale(1.1)}
+.stop.done .dot{background:var(--c);color:#fff}
+#stop-c3.done .dot{color:#111}#stop-plan.done .dot{color:var(--bg)}
+.stop span{margin-top:10px;font-weight:600;font-size:15px;line-height:1.25}
+.stop small{color:var(--mute);font-size:13px}
+@media(max-width:600px){
+ .route{flex-direction:column;gap:14px;padding:0}
+ .route::before{left:22px;right:auto;top:20px;bottom:20px;width:12px;height:auto;
+ background:linear-gradient(180deg,var(--red) 0 25%,var(--blue) 25% 50%,var(--amber) 50% 75%,var(--green) 75% 100%)}
+ .stop{flex-direction:row;width:100%;text-align:left;gap:14px}.stop span{margin:0}
+ .dot{width:56px;height:56px;flex:none}}
+/* scenario */
+.scen{background:var(--card)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);margin-top:18px}
+@media(max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.find{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.find li{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-radius:12px;padding:12px 14px;border:2px solid var(--line)}
+.find i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-style:normal;font-weight:800;display:grid;place-items:center;font-size:14px}
+.note{border-left:6px solid var(--black);padding:4px 0 4px 16px;margin:18px 0 0}
+/* challenges */
+.ch{border-top:12px solid var(--c)}
+.ch header{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.ch header .dot{width:48px;height:48px;border-width:8px;flex:none}
+.ch header p{margin:2px 0 0;color:var(--mute)}
+.q{margin:0 0 22px}
+.q label{display:flex;gap:12px;font-weight:600;font-size:17px;line-height:1.4}
+.q label b{flex:none;width:32px;height:32px;border-radius:8px;background:var(--c);color:#fff;display:grid;place-items:center;font-size:15px}
+.ch.amber .q label b,.ch.amber header .dot.done{color:#111}
+.q textarea{margin-left:44px;width:calc(100% - 44px)}
+@media(max-width:600px){.q textarea{margin-left:0;width:100%}}
+/* plan */
+.must{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:0;list-style:none}
+.must li{background:var(--card);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.rows{display:grid;gap:16px}
+.prow{background:var(--card);border-radius:14px;padding:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;position:relative}
+@media(max-width:600px){.prow{grid-template-columns:minmax(0,1fr)}}
+.prow h3{grid-column:1/-1;margin:0;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.prow label{font-weight:600;font-size:14px}
+.prow textarea{min-height:80px}
+button{font:600 16px Figtree,system-ui,sans-serif;min-height:44px;padding:10px 18px;border-radius:10px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer}
+button.pri{background:var(--ink);color:var(--bg)}
+button.x{min-height:36px;padding:4px 12px;font-size:14px;border-color:var(--line)}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.bonus{margin-top:28px;border:2px dashed var(--line);border-radius:14px;padding:18px}
+.bonus h3{margin:0 0 4px;font-size:18px}
+/* bar */
+.bar{position:sticky;bottom:0;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-top:2px solid var(--line);padding:12px max(5vw,16px);z-index:5}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.meter{flex:1 1 200px;display:flex;align-items:center;gap:12px;font-weight:600}
+.track{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--green);transition:width .3s}
+.toast{font-size:14px;color:var(--green);font-weight:600;min-width:80px}
+</style>
+</head>
+<body>
+
+<section class="band">
+ <div class="wrap">
+  <h1>The Cloud Security Incident at TechBridge Solutions</h1>
+  <div class="meta"><span>Role: <b>Cloud Security Engineer</b></span><span>Time: <b>30–40 minutes</b></span><span>Work: <b>individually or in teams</b></span></div>
+  <p style="max-width:66ch;margin:0">Objective: apply your knowledge of cloud computing to investigate a security incident and propose solutions. Follow the line from station 1 to the final plan.</p>
+  <nav class="route" id="route" aria-label="Challenges"></nav>
+  <div class="who">
+   <label>Name or team<input id="who-name" autocomplete="off"></label>
+   <label>Class<input id="who-class" autocomplete="off"></label>
+  </div>
+ </div>
+</section>
+
+<section class="band scen" id="scenario">
+ <div class="wrap">
+  <h2>The scenario</h2>
+  <div class="grid2">
+   <div>
+    <p style="margin-top:0">A company called <b>TechBridge Solutions</b> stores its customer information, employee records, and business documents on a cloud platform.</p>
+    <p>One Monday morning, the IT team discovers that an unknown person has accessed some of the company’s files.</p>
+    <p class="note">The company is worried about losing customer trust and wants to prevent this incident from happening again.</p>
+    <h3 style="margin:24px 0 6px;font-size:18px">Your mission</h3>
+    <p style="margin:0">Work individually or in teams. Read the case study carefully and write your answers.</p>
+   </div>
+   <div>
+    <h3 style="margin:0 0 12px;font-size:18px">The investigation reveals</h3>
+    <ul class="find" id="finds"></ul>
+   </div>
+  </div>
+ </div>
+</section>
+
+<div id="challenges"></div>
+
+<section class="band ch" id="plan" style="--c:var(--black)">
+ <div class="wrap">
+  <header><div class="dot" id="plan-dot">★</div><div><h2>Final challenge: security improvement plan</h2><p>Write a short security improvement plan for TechBridge Solutions.</p></div></header>
+  <p style="margin:0 0 10px;font-weight:600">Your plan must include:</p>
+  <ul class="must"><li>The security problem</li><li>The proposed solution</li><li>The cloud technology or security feature you would use</li><li>How your solution protects the company</li></ul>
+  <div class="rows" id="rows"></div>
+  <p style="margin:16px 0 0"><button id="add">+ Add another problem</button></p>
+  <div class="bonus">
+   <h3>Bonus question</h3>
+   <p style="margin:0 0 4px">If the company uses AWS, Microsoft Azure, or Google Cloud, which cloud security features could help solve this problem?</p>
+   <textarea id="bonus" aria-label="Bonus answer"></textarea>
+  </div>
+  <p class="note" style="margin-top:28px"><b>Be prepared to explain and defend your solution.</b></p>
+  <div class="bonus" style="border-style:solid;border-color:var(--green)">
+   <h3>How to hand in</h3>
+   <p style="margin:0">1. Type your name or team at the top. 2. Tap <b>Save as PDF</b> at the bottom of the screen. 3. Send the PDF file to your teacher.</p>
+  </div>
+ </div>
+</section>
+
+<div class="bar">
+ <div class="wrap">
+  <div class="meter"><span id="count">0 of 14 answered</span><div class="track"><div class="fill" id="fill"></div></div></div>
+  <button class="pri" id="pdf">Save as PDF</button>
+  <button id="copy">Copy</button>
+  <button id="clear">Clear</button>
+  <span class="toast" id="toast" role="status"></span>
+ </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+{
+const finds=["An employee used a weak password.","Several employees shared the same login credentials.","Some cloud storage files were accidentally made publicly accessible.","The company had not enabled multi-factor authentication (MFA).","The IT team did not receive an alert when suspicious activity occurred."];
+const ch=[
+ {id:"c1",c:"red",title:"Identify the problem",short:"Identify",qs:["What are the main security problems in this case?","Why was the cloud system vulnerable?","Which mistake do you think created the greatest risk? Explain your answer."]},
+ {id:"c2",c:"blue",title:"Investigate the incident",short:"Investigate",qs:["What should the IT team do immediately after discovering the unauthorized access?","How could the company determine which files were accessed?","Why is it important to check cloud activity logs?"]},
+ {id:"c3",c:"amber",title:"Design a solution",short:"Design",qs:["Suggest three security measures that could prevent this incident from happening again.","How could MFA help protect the company’s cloud accounts?","What is the purpose of access control and user permissions?","How could the company ensure that private files are not publicly accessible?"]},
+ {id:"c4",c:"green",title:"Think like a cloud engineer",short:"Think",qs:["Would you recommend storing sensitive customer information in the cloud? Why or why not?","What responsibilities belong to the cloud provider, and what responsibilities belong to the company?","If you were the company’s cloud security engineer, what would be your first priority?"]}
+];
+const fields=[["problem","The security problem"],["solution","The proposed solution"],["tech","Cloud technology or security feature"],["protect","How it protects the company"]];
+const KEY="techbridge-cloud-ws";
+let st={};
+try{st=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){st={}}
+if(!Array.isArray(st.rows)||!st.rows.length)st.rows=[{},{},{}];
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+
+document.getElementById("finds").innerHTML=finds.map((f,i)=>`<li><i>${i+1}</i><span>${f}</span></li>`).join("");
+
+let n=0;
+document.getElementById("challenges").innerHTML=ch.map((c,ci)=>`
+<section class="band ch ${c.c}" id="${c.id}" style="--c:var(--${c.c})">
+ <div class="wrap">
+  <header><div class="dot" id="dot-${c.id}">${ci+1}</div><div><h2>Challenge ${ci+1}: ${c.title}</h2><p>${c.qs.length} questions</p></div></header>
+  ${c.qs.map(q=>{n++;return `<div class="q"><label for="q${n}"><b>${n}</b><span>${q}</span></label><textarea id="q${n}" data-k="q${n}"></textarea></div>`}).join("")}
+ </div>
+</section>`).join("");
+
+const stops=[...ch.map((c,i)=>({id:c.id,c:c.c,label:c.short,sub:`Questions ${[1,4,7,11][i]}–${[3,6,10,13][i]}`,num:i+1})),{id:"plan",c:"black",label:"Final plan",sub:"+ bonus",num:"★"}];
+document.getElementById("route").innerHTML=stops.map(s=>`<a class="stop" href="#${s.id}" id="stop-${s.id}" style="--c:var(--${s.c})"><div class="dot">${s.num}</div><div><span>${s.label}</span><br><small>${s.sub}</small></div></a>`).join("");
+
+const rowsEl=document.getElementById("rows");
+const drawRows=()=>{
+ rowsEl.innerHTML=st.rows.map((r,i)=>`<div class="prow"><h3>Problem ${i+1}${st.rows.length>1?`<button class="x" data-del="${i}" aria-label="Remove problem ${i+1}">Remove</button>`:""}</h3>
+ ${fields.map(([k,l])=>`<label>${l}<textarea data-r="${i}" data-f="${k}">${esc(r[k])}</textarea></label>`).join("")}</div>`).join("");
+};
+drawRows();
+
+for(const id of ["who-name","who-class","bonus"]){const el=document.getElementById(id);el.value=st[id]||"";el.addEventListener("input",()=>{st[id]=el.value;save();prog()})}
+for(const t of document.querySelectorAll("textarea[data-k]")){t.value=st[t.dataset.k]||"";t.addEventListener("input",()=>{st[t.dataset.k]=t.value;save();prog()})}
+
+rowsEl.addEventListener("input",e=>{const t=e.target;if(t.dataset.r==null)return;st.rows[+t.dataset.r][t.dataset.f]=t.value;save();prog()});
+rowsEl.addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;st.rows.splice(+b.dataset.del,1);save();drawRows();prog()});
+document.getElementById("add").addEventListener("click",()=>{st.rows.push({});save();drawRows();prog();const last=rowsEl.lastElementChild.querySelector("textarea");last&&last.focus()});
+
+const filled=v=>String(v||"").trim().length>0;
+function prog(){
+ let done=0,q=0;
+ ch.forEach(c=>{let all=true;c.qs.forEach(()=>{q++;if(filled(st["q"+q]))done++;else all=false});
+  document.getElementById("stop-"+c.id).classList.toggle("done",all);
+  document.getElementById("dot-"+c.id).classList.toggle("done",all);
+  document.getElementById("dot-"+c.id).style.background=all?"var(--c)":"";
+  document.getElementById("dot-"+c.id).style.color=all?(c.c==="amber"?"#111":"#fff"):""});
+ const planDone=st.rows.some(r=>fields.every(([k])=>filled(r[k])));
+ if(planDone)done++;
+ document.getElementById("stop-plan").classList.toggle("done",planDone);
+ document.getElementById("count").textContent=`${done} of 14 answered`;
+ document.getElementById("fill").style.width=(done/14*100)+"%";
+}
+prog();
+
+const toast=m=>{const t=document.getElementById("toast");t.textContent=m;clearTimeout(toast.h);toast.h=setTimeout(()=>t.textContent="",2500)};
+// Build answers as [{t:"h"|"q"|"a"|"p", s:text}]
+function build(){
+ let q=0;const out=[];
+ ch.forEach((c,i)=>{out.push({t:"h",s:`Challenge ${i+1}: ${c.title}`});c.qs.forEach(t=>{q++;out.push({t:"q",s:`${q}. ${t}`},{t:"a",s:(st["q"+q]||"").trim()||"(no answer)"})})});
+ out.push({t:"h",s:"Final challenge: Security improvement plan"});
+ st.rows.forEach((r,i)=>{out.push({t:"q",s:`Problem ${i+1}`});fields.forEach(([k,l])=>out.push({t:"p",s:`${l}: ${(r[k]||"").trim()||"-"}`}))});
+ out.push({t:"h",s:"Bonus question"},{t:"q",s:"Which AWS, Azure or Google Cloud security features could help solve this problem?"},{t:"a",s:(st.bonus||"").trim()||"(no answer)"});
+ return out;
+}
+document.getElementById("copy").addEventListener("click",async()=>{
+ const txt=[`TechBridge Solutions: Cloud Security Incident`,`Name/team: ${st["who-name"]||""}`,`Class: ${st["who-class"]||""}`,""].concat(build().map(b=>b.t==="h"?"\n"+b.s.toUpperCase():b.s)).join("\n");
+ try{await navigator.clipboard.writeText(txt);toast("Copied!")}catch(e){toast("Copy blocked: select and copy manually")}
+});
+// PDF
+const clean=s=>String(s).replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,"-").replace(/…/g,"...").replace(/[^\x09\x0A\x0D\x20-\x7E -ÿ]/g,"?");
+document.getElementById("pdf").addEventListener("click",()=>{
+ const name=(st["who-name"]||"").trim();
+ if(!name){toast("Type your name first");const el=document.getElementById("who-name");el.scrollIntoView({block:"center"});el.focus();return}
+ if(!window.jspdf){toast("PDF tool not loaded: check internet");return}
+ const {jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
+ const L=18,W=174,BOT=280;let y=20;
+ const need=h=>{if(y+h>BOT){doc.addPage();y=20}};
+ const write=(s,size,style,color,gap)=>{doc.setFont("helvetica",style);doc.setFontSize(size);doc.setTextColor(...color);
+  const lines=doc.splitTextToSize(clean(s),W);const lh=size*0.42;
+  for(const ln of lines){need(lh);doc.text(ln,L,y);y+=lh}y+=gap};
+ write("TechBridge Solutions: Cloud Security Incident",17,"bold",[17,20,24],2);
+ write(`Name/team: ${name}     Class: ${(st["who-class"]||"").trim()||"-"}`,11,"normal",[60,60,60],1);
+ write(`Saved: ${new Date().toLocaleString()}`,9,"normal",[110,110,110],4);
+ doc.setDrawColor(230,38,31);doc.setLineWidth(1.2);doc.line(L,y-2,L+W,y-2);y+=4;
+ const mark=()=>{need(7);doc.setFont("helvetica","normal");doc.setFontSize(9.5);doc.setTextColor(230,38,31);
+  doc.text("Teacher mark: ________",L+W,y,{align:"right"});y+=6};
+ const items=build();
+ items.forEach((b,i)=>{
+  const next=items[i+1];
+  if(b.t==="h"){need(14);y+=3;write(b.s,14,"bold",[10,92,255],2)}
+  else if(b.t==="q")write(b.s,11,"bold",[17,20,24],1)
+  else if(b.t==="a"){write(b.s,11,"normal",[40,40,40],1);mark()}
+  else{write(b.s,10.5,"normal",[40,40,40],1.5);if(!next||next.t!=="p")mark()}
+ });
+ // teacher assessment box
+ const boxH=62;need(boxH+6);y+=4;
+ doc.setDrawColor(17,20,24);doc.setLineWidth(0.5);doc.rect(L,y,W,boxH);
+ doc.setFont("helvetica","bold");doc.setFontSize(12);doc.setTextColor(17,20,24);doc.text("For the teacher",L+4,y+8);
+ doc.setFont("helvetica","normal");doc.setFontSize(10.5);
+ doc.text("Total mark: ____________",L+4,y+17);doc.text("Date checked: ____________",L+W/2,y+17);
+ doc.text("Comments:",L+4,y+26);
+ doc.setDrawColor(190,190,190);doc.setLineWidth(0.3);
+ for(let k=0;k<4;k++)doc.line(L+4,y+34+k*7,L+W-4,y+34+k*7);
+ const pages=doc.getNumberOfPages();
+ for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(140,140,140);doc.text(`${clean(name)} - page ${i} of ${pages}`,L,290)}
+ const file=`Cloud-Security-${name.replace(/[^\w\-]+/g,"_").slice(0,40)}.pdf`;
+ try{doc.save(file);toast("PDF saved")}catch(e){toast("Could not save PDF")}
+});
+let armed=false;
+document.getElementById("clear").addEventListener("click",e=>{
+ if(!armed){armed=true;e.target.textContent="Tap again to clear all";setTimeout(()=>{armed=false;e.target.textContent="Clear"},3000);return}
+ st={rows:[{},{},{}]};save();
+ document.querySelectorAll("textarea[data-k],#who-name,#who-class,#bonus").forEach(el=>el.value="");
+ drawRows();prog();armed=false;e.target.textContent="Clear";toast("Cleared");
+});
+}
+</script>
+</body>
+</html>
